@@ -18,5 +18,15 @@
 *.tar.gz
 *.rar
 
+# Report #
+main.pdf
+main.out
+main.log
+main.fls
+main.fbd_latexmk
+main.bcf
+main.aux
+main.synctex.gz
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
