@@ -1,5 +1,5 @@
-The WhiteBoard1.2 is not complete yet, but it shoulb be fine to implement other works. The GUI are built by SWING and AWT.
-The drawing shapes are build by graphics and graphics2D.
+The WhiteBoard1.2 is not complete yet, but it shoulb be fine to implement other works. The GUI are built on SWING and AWT.
+The drawing shapes are build on graphics and graphics2D.
 
 The WelcomeWindow class is mainly targets to collecting state and username information, 
 e.g. "Sean" "Client"
