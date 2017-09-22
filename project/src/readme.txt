@@ -4,6 +4,8 @@ The drawing shapes functions are build on graphics and graphics2D.
 The WelcomeWindow class is mainly targets to collecting state and username information, 
 e.g. "Sean" "Client"
 
+My English is teached by a Chinese guy.
+
 The InputAddrWindow is aims to collecting the IP and HOST address, the user object of this
 particular user is created by this class, it is created after the connection established, and before
 the WhiteBoard object created. 
