@@ -13,3 +13,6 @@ There has an empty method to be filled. Comments in the method body.
 
 The WhiteBoardGUI class is the main body of the WhiteBoard, it now has problems as below:
 1. The window listener is not finished. The program should info user to save the unsaved file when window closing.
+2. I find some bugs and will fix it in a few days. 
+3. I'm too tired these days, once I complete the program, I will notice you guys.
+4. If any code makes you feel confused, please feel free to ask me on whatsapp.
