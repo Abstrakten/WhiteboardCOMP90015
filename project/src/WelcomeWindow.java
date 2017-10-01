@@ -24,7 +24,7 @@ public class WelcomeWindow {
 	public void createOrJoin() {
 		
 		JFrame jf = new JFrame();
-		jf.setTitle("WhiteBoard 1.1");
+		jf.setTitle("WhiteBoard 1.3");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setSize(new Dimension(400, 150));
 		jf.setResizable(false);

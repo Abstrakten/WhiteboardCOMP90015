@@ -22,13 +22,13 @@ public class InputAddrWindow {
 	}
 
 	// the state and username arguments are from WelcomeWindow class,
-	// called by confirmBT actionPerformed method.
+	// the method below is called by confirmBT actionPerformed method.
 	public void inputWindow(String state, String username) {
 
 		JFrame jf = new JFrame();
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
-		jf.setTitle("WhiteBoard1.1" + " " + state + " " + username);
+		jf.setTitle("WhiteBoard1.3" + " " + state + " " + username);
 		jf.setBackground(Color.WHITE);
 		jf.setLayout(new BorderLayout());
 		jf.setSize(new Dimension(400, 150));
@@ -66,7 +66,7 @@ public class InputAddrWindow {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (jtfIP.getText().trim().isEmpty() || jtfPort.getText().trim().isEmpty()) {
-					JOptionPane.showMessageDialog(jf, "IP and PORT can not be null!", "whiteBoard1.1",
+					JOptionPane.showMessageDialog(jf, "IP and PORT can not be null!", "whiteBoard1.2",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
@@ -78,7 +78,7 @@ public class InputAddrWindow {
 				} else {
 					JOptionPane.showMessageDialog(jf,
 							testConnect(state, username, jtfIP.getText(), jtfPort.getText()) + "..."
-									+ "Please check the IP and PORT address then retry...",
+									+ "Please check the IP and PORT address then retry...", //  
 							"whiteBoard1.1", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}

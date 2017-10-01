@@ -2,11 +2,7 @@ import java.lang.Thread.State;
 
 public class User {
 
-	private String ip;
-	private String port;
-
-	private String username;
-	private String state;
+	private String ip, port, username, state;
 
 	public User(String ip, String port, String username, String state) {
 		this.ip = ip;
