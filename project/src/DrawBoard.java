@@ -51,6 +51,8 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		Line2D line2d = new Line2D.Float();
 		shapes[shapeIndex] = line2d;
 		shapesColor[shapeIndex] = Color.BLACK;
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
 		System.out.println("draw board initial complete...");
 	}
 

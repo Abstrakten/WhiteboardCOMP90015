@@ -112,8 +112,8 @@ public class WhiteBoardGUI extends JFrame {
 		JPanel drawBoard = new DrawBoard(funcBG, colorBG, this);
 		drawBoard.add(xJLabel);
 		drawBoard.add(yJLabel);
-		drawBoard.addMouseListener(new DrawBoard(funcBG, colorBG, this));
-		drawBoard.addMouseMotionListener(new DrawBoard(funcBG, colorBG, this));
+		//drawBoard.addMouseListener(new DrawBoard(funcBG, colorBG, this));
+		//drawBoard.addMouseMotionListener(new DrawBoard(funcBG, colorBG, this));
 		
 		rightMainPnale.add(chatWindow, BorderLayout.WEST);
 		leftMainPanel.setLayout(new BorderLayout());
