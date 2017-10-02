@@ -12,7 +12,7 @@ public class User {
 
 	public String toString(User user) {
 
-		return ("UserName: " + username + "\n" + "State: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
+		return ("UserName: " + username + "\n" + "Is host: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
 				+ port + "\n");
 
 	}

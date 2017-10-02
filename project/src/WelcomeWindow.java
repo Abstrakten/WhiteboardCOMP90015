@@ -19,7 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+
+
 public class WelcomeWindow {
+
+    public enum state { HOST, CLIENT }
 
 	public void createOrJoin() {
 		

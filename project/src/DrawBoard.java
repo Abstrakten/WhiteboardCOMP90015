@@ -1,26 +1,21 @@
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.sound.sampled.Line;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JPanel;
-import javax.swing.RepaintManager;
-
-import org.w3c.dom.css.Rect;
 
 public class DrawBoard extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -28,26 +23,22 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	public ButtonGroup funcBG, colorBG;
 	public Graphics2D pen;
 	public WhiteBoardGUI gui;
-	public ButtonModel selectedShape, selectedColor;
 	public static float x, y, x1, y1, x2, y2;
 	private String command;
-	public static Shape[] shapes = new Shape[100];
-	public static Color[] shapesColor = new Color[100];
-	public static int shapeIndex = 0;
-	private Color c;
+	public static List<ColoredShape> shapes = new ArrayList<>();
+    private ColoredShape TempColoredShape;
 
-	public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI) {
+    public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI) {
 
+        this.TempColoredShape = new ColoredShape(new Line2D.Float(),Color.white,new BasicStroke(2));
 		this.colorBG = colorBG;
 		this.funcBG = funcBG;
 		this.gui = whiteBoardGUI;
 		this.setLayout(new FlowLayout());
 		this.setBackground(Color.WHITE);
-		this.setPreferredSize(new Dimension(700, 620));repaint();
+		this.setPreferredSize(new Dimension(700, 620));
+		repaint();
 		this.pen = (Graphics2D) gui.getGraphics();
-		Line2D line2d = new Line2D.Float();
-		shapes[shapeIndex] = line2d;
-		shapesColor[shapeIndex] = Color.BLACK;
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 		System.out.println("draw board initial complete...");
@@ -59,50 +50,35 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		int j = 0;
-		System.out.println("paintComponent has been called...");
-		System.out.println("shapeIndex: " + shapeIndex);
-		//System.out.println(shapesColor[shapeIndex].toString());
-		// if (shapeIndex > 0) {
-		// System.out.println("Ready to Repaint...");
-		while (j <= shapeIndex) {
-			g2d.setStroke(new BasicStroke(2));
-			g2d.setColor(shapesColor[j]);
-			//System.out.println(shapesColor[shapeIndex].toString());
-			Shape s = shapes[j];
-			System.out.println("Painting: shape " + j);
-			System.out.println(s);
-			g2d.draw(s);
-			//g2d.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-			System.out.println("Painted: shape " + j+"Color is: "+ shapesColor[shapeIndex]);
-			this.validate();
-			j++;
-		}
-		// }
+
+        for (ColoredShape s : shapes) {
+            g2d.setStroke(s.stroke);
+            g2d.setColor(s.color);
+            g2d.draw(s.shape);
+
+            // TODO check what this does
+            this.validate();
+
+        }
+
+        g2d.setStroke(TempColoredShape.stroke);
+        g2d.setColor(TempColoredShape.color);
+        g2d.draw(TempColoredShape.shape);
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
+	public void mouseClicked(MouseEvent e) { }
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		ButtonModel selectedBT = this.funcBG.getSelection();
-		this.command = selectedBT.getActionCommand();
-
+		this.command = this.funcBG.getSelection().getActionCommand();
 		x1 = e.getX();
 		y1 = e.getY();
 		System.out.println("Mouse pressed...");
-		Line2D line2d = new Line2D.Float();
-		shapes[shapeIndex] = line2d;
-		shapesColor[shapeIndex] = gui.getPenColor();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		ButtonModel selectedBT = this.funcBG.getSelection();
-		this.command = selectedBT.getActionCommand();
 		x2 = e.getX();
 		y2 = e.getY();
 		System.out.println("Mouse released...");
@@ -113,18 +89,13 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		} else if (command.equals("Rectangle")) {
 			Rectangle2D rect = new Rectangle2D.Float(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
 					Math.abs(y1 - y2));
-			
-			shapeIndex++;
-			
-			shapes[shapeIndex] = rect;
-			this.c = gui.getPenColor();
-			shapesColor[shapeIndex] = c;
-			System.out.println("Shape stored in: "+shapeIndex);
+
+
+            // TODO get stroke from gui
+			shapes.add(new ColoredShape(rect,gui.getPenColor(),new BasicStroke(2)));
 			
 			// pen.drawRect(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
 			// Math.abs(y1 - y2));
-			System.out.println("rect objec create complete..." + "shapeIndex is: " + (shapeIndex -1) + " "
-					+ shapes[shapeIndex - 1].toString());
 		} else if (command.equals("Circle")) {
 			// pen.drawOval(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
 			// Math.abs(x2 - x1));
@@ -175,8 +146,10 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		} else if (command.equals("Rectangle")) {
 			Rectangle2D rect = new Rectangle2D.Float(Math.min(x, x1), Math.min(y, y1), Math.abs(x - x1),
 					Math.abs(y1 - y));
-			shapes[shapeIndex] = rect;
-			shapesColor[shapeIndex] = gui.getPenColor();
+            TempColoredShape.shape = rect;
+			TempColoredShape.color = gui.getPenColor();
+			// TODO get stroke from gui
+			TempColoredShape.stroke = new BasicStroke(2);
 			
 			// pen.drawRect(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
 			// Math.abs(y1 - y2));
@@ -190,4 +163,16 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		// TODO Auto-generated method stub
 
 	}
+
+    private class ColoredShape {
+        private BasicStroke stroke;
+        private Shape shape;
+        private Color color;
+
+        public ColoredShape(Shape s, Color c, BasicStroke stroke) {
+            this.shape = s;
+            this.color = c;
+            this.stroke = stroke;
+        }
+    }
 }
