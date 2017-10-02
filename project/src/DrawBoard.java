@@ -24,9 +24,6 @@ import org.w3c.dom.css.Rect;
 
 public class DrawBoard extends JPanel implements MouseListener, MouseMotionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public ButtonGroup funcBG, colorBG;
 	public Graphics2D pen;
@@ -76,7 +73,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			System.out.println("Painting: shape " + j);
 			System.out.println(s);
 			g2d.draw(s);
-			g2d.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+			//g2d.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
 			System.out.println("Painted: shape " + j+"Color is: "+ shapesColor[shapeIndex]);
 			this.validate();
 			j++;

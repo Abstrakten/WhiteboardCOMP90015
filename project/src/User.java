@@ -1,19 +1,18 @@
-import java.lang.Thread.State;
-
 public class User {
 
-	private String ip, port, username, state;
+	private String ip, port, username;
+	boolean isHost;
 
-	public User(String ip, String port, String username, String state) {
+	public User(String ip, String port, String username, Boolean host) {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
-		this.state = state;
+		this.isHost = host;
 	}
 
 	public String toString(User user) {
 
-		return ("UserName: " + username + "\n" + "State: " + state + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
+		return ("UserName: " + username + "\n" + "State: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
 				+ port + "\n");
 
 	}
@@ -42,12 +41,12 @@ public class User {
 		this.username = username;
 	}
 
-	public String getState() {
-		return state;
+	public Boolean getState() {
+		return isHost;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setState(Boolean state) {
+		this.isHost = state;
 	}
 
 }

@@ -91,16 +91,14 @@ public class WelcomeWindow {
 					JOptionPane.showMessageDialog(jf,
 							"Please enter the server IP address and the server Port Number", "whiteBoard1.1",
 							JOptionPane.INFORMATION_MESSAGE);
-					InputAddrWindow inputAddWin = new InputAddrWindow("Host", userNameJTF.getText());
+					InputAddrWindow inputAddWin = new InputAddrWindow(true, userNameJTF.getText());
 					jf.setVisible(false);
-					inputAddWin.inputWindow("Host", userNameJTF.getText());
 					jf.dispose();
 				} else {
 					JOptionPane.showMessageDialog(jf, "Please enter the host's IP address and Port Number",
 							"whiteBoard1.1", JOptionPane.INFORMATION_MESSAGE);
-					InputAddrWindow inputAddWin = new InputAddrWindow("Client", userNameJTF.getText());
+					InputAddrWindow inputAddWin = new InputAddrWindow(false, userNameJTF.getText());
 					jf.setVisible(false);
-					inputAddWin.inputWindow("Client", userNameJTF.getText());
 					jf.dispose();
 				}
 			}

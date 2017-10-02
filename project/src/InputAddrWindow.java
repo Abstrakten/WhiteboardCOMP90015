@@ -13,17 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class InputAddrWindow {
-	public String state;
+	public Boolean state;
 	public String username;
 	
-	public InputAddrWindow(String state, String username) {
+	public InputAddrWindow(boolean state, String username) {
 		this.state = state;
 		this.username = username;
-	}
-
-	// the state and username arguments are from WelcomeWindow class,
-	// the method below is called by confirmBT actionPerformed method.
-	public void inputWindow(String state, String username) {
 
 		JFrame jf = new JFrame();
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,7 +73,7 @@ public class InputAddrWindow {
 				} else {
 					JOptionPane.showMessageDialog(jf,
 							testConnect(state, username, jtfIP.getText(), jtfPort.getText()) + "..."
-									+ "Please check the IP and PORT address then retry...", //  
+									+ "Please check the IP and PORT address then retry...", //
 							"whiteBoard1.1", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
@@ -93,7 +88,7 @@ public class InputAddrWindow {
 		});
 	}
 
-	protected String testConnect(String state, String username, String ipAddress, String portAddress) {
+	protected String testConnect(Boolean state, String username, String ipAddress, String portAddress) {
 
 		// TODO Auto-generated method stub
 

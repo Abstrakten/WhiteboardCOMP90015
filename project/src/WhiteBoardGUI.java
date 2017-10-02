@@ -42,7 +42,7 @@ import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 // hi Marc the method sendMessage needs you! Pull the scroll bar in the end then you can see it.
 public class WhiteBoardGUI extends JFrame {
 
-	private String username, state, ip, port;
+	private String username, ip, port;
 	private Boolean isHost = false;
 	private User[] onlineUser = new User[100];
 	private User user;
@@ -61,13 +61,16 @@ public class WhiteBoardGUI extends JFrame {
 		this.user = user;
 		this.username = user.getUsername();
 		this.ip = user.getIp();
-		this.state = user.getState();
+		this.isHost = user.getState();
 		this.port = user.getPort();
-		if (this.state.equals("Host")) {
-			this.isHost = true;
-		}
 
-		this.setTitle("WhiteBoard 1.3" + " " + state + " " + username);
+		String titleHost = "Client";
+
+		if (isHost) {
+		    titleHost = "Host";
+        }
+
+		this.setTitle("WhiteBoard 1.3" + " " + titleHost + " " + username);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
@@ -99,16 +102,11 @@ public class WhiteBoardGUI extends JFrame {
 //		JPanel drawBoard = new JPanel();
 //		drawBoard = drawBoard();
 //		drawBoard.setLayout(new FlowLayout());
-		
-		JPanel colorAndFunc = new JPanel();
-		colorAndFunc = colorAndFunc();
-		
-		JPanel chatWindow = new JPanel();
-		chatWindow = chatWindow();
-		
-		JMenuBar jMenuBar = new JMenuBar();
-		jMenuBar = menuBar();
-		
+
+		JPanel colorAndFunc = colorAndFunc();
+		JPanel chatWindow = chatWindow();
+		JMenuBar jMenuBar = menuBar();
+
 		JPanel drawBoard = new DrawBoard(funcBG, colorBG, this);
 		drawBoard.add(xJLabel);
 		drawBoard.add(yJLabel);
@@ -273,7 +271,7 @@ public class WhiteBoardGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				// push the newest received message to chat screen.
-				screen.append(username + "[" + state + "]: " + sendMessage(sendText.getText(), screen) + "\n");
+				screen.append(username + sendMessage(sendText.getText(), screen) + "\n");
 				// reset sending text bar.
 				sendText.setText("");
 				// reset cursor.
@@ -358,7 +356,7 @@ public class WhiteBoardGUI extends JFrame {
 
 	// testing method, the main method of GUI is in WelcomeWindow class.
 	public static void main(String[] args) {
-		User xin = new User("Ip", "Port", "Xin", "Host");
+		User xin = new User("Ip", "Port", "Xin", true);
 		WhiteBoardGUI test = new WhiteBoardGUI(xin);
 		test.initOperationInterface();
 
