@@ -1,10 +1,14 @@
+/**
+ * @author Xin Qi
+ * @version 1.4
+ */
+ 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.security.cert.PKIXRevocationChecker.Option;
 
 import javax.management.OperationsException;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class MyWindowListener implements WindowListener {
 
@@ -23,19 +27,22 @@ public class MyWindowListener implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		
-		int i = JOptionPane.showConfirmDialog(mainFrame, "Do you want to save the changes?", "WhiteBoard1.3", 
+
+		int i = JOptionPane.showConfirmDialog(mainFrame, "Do you want to save the changes?", "WhiteBoard1.4",
 				JOptionPane.YES_NO_CANCEL_OPTION);
-		
+
 		if (i == 0) {
 			// save
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
 		} else if(i == 1) {
+			// not save
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		} else {
+			// cancel
 			mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
-		
+
 	}
 
 	@Override

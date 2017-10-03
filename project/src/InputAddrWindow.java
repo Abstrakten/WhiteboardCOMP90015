@@ -1,10 +1,20 @@
 
+/**
+ * @author Xin Qi
+ * @version 1.4
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,15 +25,18 @@ import javax.swing.JTextField;
 public class InputAddrWindow {
 	public Boolean state;
 	public String username;
-	
+	private String serverIp;
+	private String serverPort;
+	private List<User> users = new ArrayList<>(); 
+
 	public InputAddrWindow(boolean state, String username) {
 		this.state = state;
 		this.username = username;
 
 		JFrame jf = new JFrame();
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
-		jf.setTitle("WhiteBoard1.3" + " " + state + " " + username);
+		jf.setTitle("WhiteBoard1.4" + " " + state + " " + username);
 		jf.setBackground(Color.WHITE);
 		jf.setLayout(new BorderLayout());
 		jf.setSize(new Dimension(400, 150));
@@ -61,20 +74,29 @@ public class InputAddrWindow {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (jtfIP.getText().trim().isEmpty() || jtfPort.getText().trim().isEmpty()) {
-					JOptionPane.showMessageDialog(jf, "IP and PORT can not be null!", "whiteBoard1.2",
+					JOptionPane.showMessageDialog(jf, "IP and PORT can not be null!", "whiteBoard1.4",
 							JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 				if (testConnect(state, username, jtfIP.getText(), jtfPort.getText()).equals("1")) {
-					User user = new User(jtfIP.getText(), jtfPort.getText(), username, state);
-					WhiteBoardGUI drawBoard = new WhiteBoardGUI(user);
-					drawBoard.initOperationInterface();
-					jf.dispose();
+					serverIp = jtfIP.getText();
+					serverPort = jtfPort.getText();
+					User user;
+					try {
+						user = new User(InetAddress.getLocalHost().getHostAddress(), "10086", username, state);
+						users.add(user);
+						WhiteBoardGUI gui = new WhiteBoardGUI(users);
+						gui.initOperationInterface();
+						jf.dispose();
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				} else {
 					JOptionPane.showMessageDialog(jf,
 							testConnect(state, username, jtfIP.getText(), jtfPort.getText()) + "..."
 									+ "Please check the IP and PORT address then retry...", //
-							"whiteBoard1.1", JOptionPane.INFORMATION_MESSAGE);
+							"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
 					return;
 				}
 			}
@@ -83,7 +105,7 @@ public class InputAddrWindow {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				jf.dispose();
 			}
 		});
 	}

@@ -1,6 +1,6 @@
 /**
  * @author Xin Qi
- * @version 1.2
+ * @version 1.4
  */
 
 import java.awt.BorderLayout;
@@ -23,12 +23,12 @@ import javax.swing.JTextField;
 
 public class WelcomeWindow {
 
-    public enum state { HOST, CLIENT }
+//    public enum state { HOST, CLIENT }
 
 	public void createOrJoin() {
-		
+
 		JFrame jf = new JFrame();
-		jf.setTitle("WhiteBoard 1.3");
+		jf.setTitle("WhiteBoard 1.4");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setSize(new Dimension(400, 150));
 		jf.setResizable(false);
@@ -37,7 +37,7 @@ public class WelcomeWindow {
 
 		JPanel jp1 = new JPanel();
 		JPanel jp2 = new JPanel();
-		JPanel jp1_2 = new JPanel(); 
+		JPanel jp1_2 = new JPanel();
 		JPanel jp3 = new JPanel();
 
 		jp1.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -47,37 +47,37 @@ public class WelcomeWindow {
 		jp1_2.setBackground(Color.WHITE);
 		jp3.setLayout(new FlowLayout(FlowLayout.CENTER));
 		jp3.setBackground(Color.WHITE);
-		
+
 		JLabel userNameJL = new JLabel("Username");
 		JTextField userNameJTF = new JTextField(20);
 		jp1.add(userNameJL, FlowLayout.LEFT);
 		jp1.add(userNameJTF, FlowLayout.CENTER);
-		
+
 		JRadioButton createBT = new JRadioButton("Create a new whiteboard");
 		JRadioButton joinBT = new JRadioButton("Join an exist whiteboard");
 		createBT.setActionCommand("1");
 		joinBT.setActionCommand("0");
 		ButtonGroup createOrJoinBG = new ButtonGroup();
 		createBT.setSelected(true);
-		
+
 		JButton confirmBT = new JButton("Confirm");
 		JButton cancelBT = new JButton("Cancel");
 		confirmBT.setActionCommand("Confirm");
 		cancelBT.setActionCommand("Cancel");
 		jp3.add(confirmBT, FlowLayout.LEFT);
 		jp3.add(cancelBT, FlowLayout.CENTER);
-		
+
 		createOrJoinBG.add(joinBT);
 		createOrJoinBG.add(createBT);
 		jp2.add(joinBT, FlowLayout.LEFT);
 		jp2.add(createBT, FlowLayout.CENTER);
-		
+
 		jp1_2.add(jp1, BorderLayout.CENTER);
 		jp1_2.add(jp2,BorderLayout.SOUTH);
-		
+
 		jf.add(jp1_2, BorderLayout.CENTER);
 		jf.add(jp3, BorderLayout.SOUTH);
-		
+
 		confirmBT.addActionListener(new ActionListener() {
 
 			@Override
@@ -107,9 +107,9 @@ public class WelcomeWindow {
 				}
 			}
 		});
-		
+
 		cancelBT.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -117,7 +117,7 @@ public class WelcomeWindow {
 		});
 		jf.setVisible(true);
 	}
-	
+
 	public static void main(String[] args) {
 		WelcomeWindow welcomeWindow = new WelcomeWindow();
 		welcomeWindow.createOrJoin();

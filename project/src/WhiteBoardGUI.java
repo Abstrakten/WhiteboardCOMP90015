@@ -1,28 +1,25 @@
 
 /**
  * @author Xin Qi
- * @version 1.2
+ * @version 1.4
  */
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.Closeable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.sound.sampled.Line;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -33,9 +30,9 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
 // using swing and awt extends JFrame.
@@ -44,21 +41,41 @@ public class WhiteBoardGUI extends JFrame {
 
 	private String username, ip, port;
 	private Boolean isHost = false;
-	private User[] onlineUser = new User[100];
+	private List<User> users = new ArrayList<>();
 	private User user;
 	private Color penColor;
+	private BasicStroke penStroke;
+	private JRadioButton colorButton1 = new JRadioButton();
 	private ButtonGroup funcBG, colorBG;
 	public JLabel xJLabel = new JLabel("0");
 	public JLabel yJLabel = new JLabel("0");
+	private JPanel drawBoard;
+	private static JTabbedPane tab;
+	
 
 	// frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
 	// the arguments are from InputAddrWindow class, called in the method connectBT
 	// actionPerformed.
-	public WhiteBoardGUI(User user) {
+	public WhiteBoardGUI(List<User> users) {
 
 		super();
-		this.user = user;
+		this.users = users;
+		for(User user:users) {
+			try {
+				
+				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
+					this.user = user;
+					System.out.println(this.user);
+					
+				}
+			} catch (UnknownHostException e) {
+				
+				e.printStackTrace();
+				
+			}
+		}
+		
 		this.username = user.getUsername();
 		this.ip = user.getIp();
 		this.isHost = user.getState();
@@ -67,10 +84,12 @@ public class WhiteBoardGUI extends JFrame {
 		String titleHost = "Client";
 
 		if (isHost) {
-		    titleHost = "Host";
-        }
+			titleHost = "Host";
+			
+		}
 
-		this.setTitle("WhiteBoard 1.3" + " " + titleHost + " " + username);
+		this.users.add(this.user);
+		this.setTitle("WhiteBoard 1.4" + " " + titleHost + " " + username);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
@@ -78,9 +97,9 @@ public class WhiteBoardGUI extends JFrame {
 		this.setMinimumSize(new Dimension(960, 500));
 		this.addWindowListener(new MyWindowListener(this));
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		
 	}
 
-	
 	// defining components of each component of the white board.
 	// and adding these components to the frame, include a draw board at central,
 	// a function panel (line, circle, free draw (default selected), erase, text and
@@ -92,51 +111,133 @@ public class WhiteBoardGUI extends JFrame {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBackground(Color.BLACK);
-		
+
 		JPanel leftMainPanel = new JPanel();
 		leftMainPanel.setLayout(new BorderLayout());
-		
+
 		JPanel rightMainPnale = new JPanel();
 		rightMainPnale.setLayout(new BorderLayout());
+
+		JPanel southPanel = new JPanel();
+		southPanel.setLayout(new BorderLayout());
 		
-//		JPanel drawBoard = new JPanel();
-//		drawBoard = drawBoard();
-//		drawBoard.setLayout(new FlowLayout());
+		tab = new JTabbedPane();
 
 		JPanel colorAndFunc = colorAndFunc();
 		JPanel chatWindow = chatWindow();
+		JPanel colorAndStroke = colorAndStroke();
 		JMenuBar jMenuBar = menuBar();
 
-		JPanel drawBoard = new DrawBoard(funcBG, colorBG, this);
+		setDrawBoard(new DrawBoard(funcBG, colorBG, this, this.users));
 		drawBoard.add(xJLabel);
 		drawBoard.add(yJLabel);
-		//drawBoard.addMouseListener(new DrawBoard(funcBG, colorBG, this));
-		//drawBoard.addMouseMotionListener(new DrawBoard(funcBG, colorBG, this));
-		
+
 		rightMainPnale.add(chatWindow, BorderLayout.WEST);
-		leftMainPanel.setLayout(new BorderLayout());
+		southPanel.add(colorAndFunc, BorderLayout.CENTER);
+		southPanel.add(colorAndStroke, BorderLayout.EAST);
+		leftMainPanel.add(drawBoard, BorderLayout.CENTER);
+		leftMainPanel.add(southPanel, BorderLayout.SOUTH);
 		mainPanel.add(rightMainPnale, BorderLayout.EAST);
 		mainPanel.add(leftMainPanel, BorderLayout.CENTER);
-		leftMainPanel.add(drawBoard, BorderLayout.CENTER);
-		leftMainPanel.add(colorAndFunc, BorderLayout.SOUTH);
 
+		tab.addTab("Untitled", mainPanel);
+		setPenStroke(new BasicStroke(1));
 		this.setJMenuBar(jMenuBar);
-		this.add(mainPanel);
+		this.add(tab);
 		this.setVisible(true);
 		this.validate();
+
 	}
 
-	// this method return the drawBoard Panel (the big white one), defining draw
-	// board panel.
-//	private JPanel drawBoard() {
-//
-//		JPanel drawBoard = new JPanel();
-//		// drawBoard.setPreferredSize(new Dimension(700, 620));
-//		drawBoard.setLayout(new BorderLayout());
-//		drawBoard.setBackground(Color.WHITE);
-//		return drawBoard;
-//
-//	}
+	private JPanel colorAndStroke() {
+		JPanel cAndS = new JPanel();
+		cAndS.setLayout(new BorderLayout());
+		cAndS.setBackground(Color.GRAY);
+		JButton color = new JButton("More Color");
+		JButton stroke = new JButton("Choose Stroke");
+		color.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				Color c = getPenColor();
+				c = JColorChooser.showDialog(getParent(), "White Board1.4 ColorChooser", getPenColor());
+				setPenColor(c);
+				colorButton1.setBackground(c);
+				colorButton1.setSelected(true);
+
+			}
+		});
+		cAndS.add(color, BorderLayout.NORTH);
+		stroke.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame jf = new JFrame("WhiteBoard1.4 StrokeChooser");
+
+				jf.setSize(300, 100);
+				jf.setResizable(false);
+				jf.setBackground(Color.GRAY);
+				jf.setLayout(new BorderLayout());
+				jf.setLocationRelativeTo(null);
+				JPanel size = new JPanel();
+				size.setLayout(new FlowLayout());
+				// size.setBackground(Color.GRAY);;
+				jf.add(size, BorderLayout.CENTER);
+
+				int i = 0;
+				String[] sizeArray = { "2", "4", "6", "8", "10" };
+				ButtonGroup sizeBG = new ButtonGroup();
+				JRadioButton sizeBTDefault = new JRadioButton();
+				JLabel sizeLabel1 = new JLabel("1");
+				sizeBTDefault.setActionCommand("1");
+				sizeBTDefault.setSelected(true);
+				sizeBG.add(sizeBTDefault);
+				size.add(sizeBTDefault);
+				size.add(sizeLabel1);
+				while (i < 5) {
+					JRadioButton sizeBT = new JRadioButton();
+					JLabel sizeLabel = new JLabel(sizeArray[i]);
+					sizeBT.setActionCommand(sizeArray[i]);
+					sizeBG.add(sizeBT);
+					size.add(sizeBT);
+					size.add(sizeLabel);
+					i++;
+				}
+				JButton strokeConfirm = new JButton("Confirm");
+				JButton strokeCancel = new JButton("Cancel");
+				strokeConfirm.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						int i = Integer.parseInt(sizeBG.getSelection().getActionCommand());
+						setPenStroke(new BasicStroke((float) i));
+						jf.setVisible(false);
+						jf.dispose();
+						System.out.println("Stroke is: " + getPenStroke());
+					}
+				});
+
+				strokeCancel.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						jf.setVisible(false);
+						jf.dispose();
+						System.out.println("Stroke is: " + getPenStroke());
+					}
+				});
+				JPanel confrimAndCancel = new JPanel();
+				confrimAndCancel.setLayout(new FlowLayout());
+				confrimAndCancel.add(strokeConfirm);
+				confrimAndCancel.add(strokeCancel);
+				jf.add(confrimAndCancel, BorderLayout.SOUTH);
+				jf.setVisible(true);
+			}
+		});
+		cAndS.add(stroke, BorderLayout.SOUTH);
+		return cAndS;
+	}
 
 	// This method return a panel for both color and function panel.
 	private JPanel colorAndFunc() {
@@ -167,16 +268,16 @@ public class WhiteBoardGUI extends JFrame {
 
 		// define each functional button as a JRadioButton, which means in the same
 		// group, only one button could be selected.
-		String funcBT[] = {"Line","Circle","Rectangle","Oval","Erase","Text"};
-		
-		for (int i = 0; i < 6; i++) {
+		String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
+
+		for (int i = 0; i < 7; i++) {
 			JRadioButton funcButton = new JRadioButton(funcBT[i]);
 			funcButton.setActionCommand(funcBT[i]);
 			funcBG.add(funcButton);
 			functionP.add(funcButton);
 		}
 
-		// define default button. 
+		// define default button.
 		JRadioButton funcButton5 = new JRadioButton("Free draw", true);
 		funcButton5.setActionCommand("Free draw");
 		funcBG.add(funcButton5);
@@ -202,7 +303,8 @@ public class WhiteBoardGUI extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					setPenColor(colorButton.getBackground());
-					System.out.println("color chosed "+"R:"+getPenColor().getRed()+" G:"+getPenColor().getGreen()+" B:"+getPenColor().getBlue());
+					System.out.println("color chosed " + "R:" + getPenColor().getRed() + " G:"
+							+ getPenColor().getGreen() + " B:" + getPenColor().getBlue());
 				}
 			});
 			colorBG.add(colorButton);
@@ -211,19 +313,19 @@ public class WhiteBoardGUI extends JFrame {
 
 		// set one more default selected color button as black. then pack it into color
 		// panel and color button group.
-		JRadioButton colorButton = new JRadioButton();
-		colorButton.setOpaque(true);
-		colorButton.setFocusPainted(false);
-		colorButton.setBackground(Color.BLACK);
-		colorButton.setPreferredSize(new Dimension(30, 30));
-		colorBG.add(colorButton);
-		colorP.add(colorButton);
-		colorButton.setSelected(true);
-		colorButton.addActionListener(new ActionListener() {
+
+		colorButton1.setOpaque(true);
+		colorButton1.setFocusPainted(false);
+		colorButton1.setBackground(Color.BLACK);
+		colorButton1.setPreferredSize(new Dimension(30, 30));
+		colorBG.add(colorButton1);
+		colorP.add(colorButton1);
+		colorButton1.setSelected(true);
+		colorButton1.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setPenColor(colorButton.getBackground());
+				setPenColor(colorButton1.getBackground());
 				System.out.println("color chosed");
 			}
 		});
@@ -300,22 +402,52 @@ public class WhiteBoardGUI extends JFrame {
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newSession = new JMenuItem("New File");
 		JMenuItem openMenu = new JMenuItem("Open");
-		JMenuItem openNewTab = new JMenuItem("Open In New Tab");
 		JMenuItem saveMenu = new JMenuItem("Save");
 		JMenuItem saveAsMenu = new JMenuItem("Save As");
 		JMenuItem closeMenu = new JMenuItem("Close");
-		JMenuItem closeAllMenu = new JMenuItem("Close All");
 		JMenuItem about = new JMenuItem("About");
 		fileMenu.add(newSession);
 		fileMenu.add(openMenu);
-		fileMenu.add(openNewTab);
 		fileMenu.add(saveMenu);
 		fileMenu.add(saveAsMenu);
 		fileMenu.add(closeMenu);
-		fileMenu.add(closeAllMenu);
 		fileMenu.add(about);
 		JMenuBar jMenuBar = new JMenuBar();
 		jMenuBar.add(fileMenu);
+
+		saveMenu.addActionListener(e->{
+			FileUtil.save(users);
+		});
+		
+		openMenu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				List<User> newUsers = FileUtil.load();
+				WhiteBoardGUI gui = new WhiteBoardGUI(newUsers);
+				gui.initOperationInterface();
+			}
+		});
+		newSession.addActionListener(new ActionListener() {
+			int i = 2;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<User> newUsers = new ArrayList<>();
+				User xin;
+				try {
+					xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin", true);
+					newUsers.add(xin);
+					WhiteBoardGUI gui = new WhiteBoardGUI(users);
+					gui.initOperationInterface();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		});
 
 		return jMenuBar;
 
@@ -355,13 +487,20 @@ public class WhiteBoardGUI extends JFrame {
 	}
 
 	// testing method, the main method of GUI is in WelcomeWindow class.
-	public static void main(String[] args) {
-		User xin = new User("Ip", "Port", "Xin", true);
-		WhiteBoardGUI test = new WhiteBoardGUI(xin);
-		test.initOperationInterface();
-
-	}
-
+//	public static void main(String[] args) {
+//		List<User> users1 = new ArrayList<>();
+//		User xin;
+//		try {
+//			xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin", true);
+//			users1.add(xin);
+//			WhiteBoardGUI test = new WhiteBoardGUI(users1);
+//			test.initOperationInterface();
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
 
 	/**
 	 * @return the penColor
@@ -370,11 +509,27 @@ public class WhiteBoardGUI extends JFrame {
 		return penColor;
 	}
 
-
 	/**
-	 * @param penColor the penColor to set
+	 * @param penColor
+	 *            the penColor to set
 	 */
 	public void setPenColor(Color penColor) {
 		this.penColor = penColor;
+	}
+
+	public BasicStroke getPenStroke() {
+		return penStroke;
+	}
+
+	public void setPenStroke(BasicStroke stroke) {
+		this.penStroke = stroke;
+	}
+
+	public JPanel getDrawBoard() {
+		return drawBoard;
+	}
+
+	public void setDrawBoard(JPanel drawBoard) {
+		this.drawBoard = drawBoard;
 	}
 }

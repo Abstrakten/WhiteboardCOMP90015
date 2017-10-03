@@ -1,21 +1,38 @@
+
+/**
+ * @author Xin Qi
+ * @version 1.4
+ */
+
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class DrawBoard extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -23,88 +40,249 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	public ButtonGroup funcBG, colorBG;
 	public Graphics2D pen;
 	public WhiteBoardGUI gui;
-	public static float x, y, x1, y1, x2, y2;
+	public static float x, y, x1, y1, x2, y2, cx, cy;
 	private String command;
 	public static List<ColoredShape> shapes = new ArrayList<>();
-    private ColoredShape TempColoredShape;
+	private ColoredShape TempColoredShape;
+	private InputString TempString;
+	private static List<InputString> strings = new ArrayList<>();
+	private User user;
+	private List<User> users = new ArrayList<>();
 
-    public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI) {
+	public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI, List<User> users) {
 
-        this.TempColoredShape = new ColoredShape(new Line2D.Float(),Color.white,new BasicStroke(2));
+		this.TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
+		this.TempString = new InputString("", Color.WHITE, 0, 0);
 		this.colorBG = colorBG;
 		this.funcBG = funcBG;
 		this.gui = whiteBoardGUI;
 		this.setLayout(new FlowLayout());
 		this.setBackground(Color.WHITE);
 		this.setPreferredSize(new Dimension(700, 620));
+		this.users = users;
+		for(User user:users) {
+			try {
+				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
+					this.user = user;
+					System.out.println(user);
+				}
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		repaint();
-		this.pen = (Graphics2D) gui.getGraphics();
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 		System.out.println("draw board initial complete...");
+
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		// TODO Auto-generated method stub
-
+		this.command = this.funcBG.getSelection().getActionCommand();
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		
+		for (InputString i : user.getStrings()) {
 
-        for (ColoredShape s : shapes) {
-            g2d.setStroke(s.stroke);
-            g2d.setColor(s.color);
-            g2d.draw(s.shape);
+		
+			g2d.setColor(i.getColor());
+			g2d.drawString(i.getString(), i.getX(), i.getY());
 
-            // TODO check what this does
-            this.validate();
+		}
 
-        }
+		for (ColoredShape s : user.getShapes()) {
 
-        g2d.setStroke(TempColoredShape.stroke);
-        g2d.setColor(TempColoredShape.color);
-        g2d.draw(TempColoredShape.shape);
+			g2d.setStroke(s.getStroke());
+			g2d.setColor(s.getColor());
+			g2d.draw(s.getShape());
+
+		}
+
+//		if(command.equals("Choose")) {
+//			AffineTransform transform = new AffineTransform();
+//			transform.translate(x-x1, y-x1);
+//			g2d.translate(x-x1,x-x1);
+//			x1 = x;
+//			y1 = y;
+//		}
+		g2d.setStroke(TempColoredShape.getStroke());
+		g2d.setColor(TempColoredShape.getColor());
+		g2d.draw(TempColoredShape.getShape());
+		g2d.setColor(TempString.getColor());
+		g2d.drawString(TempString.getString(), TempString.getX(), TempString.getY());
+
+		this.validate();
+
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) { }
+	public void mouseClicked(MouseEvent e) {
+
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+
 		this.command = this.funcBG.getSelection().getActionCommand();
+
 		x1 = e.getX();
 		y1 = e.getY();
 		System.out.println("Mouse pressed...");
+
+		if (command.equals("Choose")) {
+			for (InputString i : user.getStrings()) {
+
+				if ((x1 < i.getX() + 10 && x1 > i.getX() - 10) && (y1 < i.getY() + 10 && y1 > i.getY() - 10)) {
+					System.out.println("get graphic");
+					TempString.setString(i.getString());
+					TempString.setColor(Color.RED);
+					
+
+				}
+			}
+			for (ColoredShape s : user.getShapes()) {
+
+				float shapeX = 0;
+				float shapeY = 0;
+				shapeX = (float) s.getShape().getBounds2D().getX();
+				shapeY = (float) s.getShape().getBounds2D().getY();
+
+				if ((x1 < shapeX + 10 && x1 > shapeX - 10) && (y1 < shapeY + 10 && y1 > shapeY - 10)) {
+
+					System.out.println("get graphic");
+					TempColoredShape.setShape(s.getShape());
+					TempColoredShape.setColor(Color.RED);
+					TempColoredShape.setStroke(s.getStroke());
+				
+				}
+			}
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		this.command = this.funcBG.getSelection().getActionCommand();
 		x2 = e.getX();
 		y2 = e.getY();
 		System.out.println("Mouse released...");
 		System.out.println("command is: " + command);
 		if (command.equals("Line")) {
-			// pen.drawLine(x1, y1, x2, y2);
+
+			Line2D line2d = new Line2D.Float(x1, y1, x2, y2);
+			user.addShape(new ColoredShape(line2d, gui.getPenColor(), gui.getPenStroke()));
 			System.out.println("Drawing line...");
+
 		} else if (command.equals("Rectangle")) {
+
 			Rectangle2D rect = new Rectangle2D.Float(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
 					Math.abs(y1 - y2));
+			user.addShape(new ColoredShape(rect, gui.getPenColor(), gui.getPenStroke()));
+			System.out.println("Drawing rect...");
 
-
-            // TODO get stroke from gui
-			shapes.add(new ColoredShape(rect,gui.getPenColor(),new BasicStroke(2)));
-			
-			// pen.drawRect(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
-			// Math.abs(y1 - y2));
 		} else if (command.equals("Circle")) {
-			// pen.drawOval(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
-			// Math.abs(x2 - x1));
+
+			Ellipse2D circle = new Ellipse2D.Float(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
+					Math.abs(x2 - x1));
+			user.addShape(new ColoredShape(circle, gui.getPenColor(), gui.getPenStroke()));
 			System.out.println("Drawing circle...");
+
 		} else if (command.equals("Oval")) {
-			// pen.drawOval(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
-			// Math.abs(y1 - y2));
+
+			Ellipse2D oval = new Ellipse2D.Float(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
+					Math.abs(y1 - y2));
+			user.addShape(new ColoredShape(oval, gui.getPenColor(), gui.getPenStroke()));
 			System.out.println("Drawing oval...");
+
+		} else if (command.equals("Text")) {
+			JFrame stringInput = new JFrame("White Board1.4 Text");
+			stringInput.setLocationRelativeTo(null);
+			stringInput.setSize(300, 150);
+			stringInput.setResizable(false);
+			stringInput.setLayout(new BorderLayout());
+			JLabel tips = new JLabel("What do you want to text?");
+			JButton comfirm = new JButton("Confirm");
+			JButton cancel = new JButton("Cancel");
+			JTextArea text = new JTextArea();
+			text.setEditable(true);
+			text.setRequestFocusEnabled(true);
+			comfirm.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (text.getText().trim().isEmpty()) {
+
+						JOptionPane.showMessageDialog(stringInput,
+								"Text can not be null, if you want cancel " + "\nthis operation, please click cancel.",
+								"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
+						return;
+
+					} else {
+
+						String userText;
+						userText = text.getText();
+						user.addString(new InputString(userText, gui.getPenColor(), x1, y1));
+						stringInput.dispose();
+						repaint();
+
+					}
+				}
+			});
+			cancel.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					stringInput.dispose();
+				}
+			});
+
+			JPanel buttons = new JPanel();
+			buttons.setLayout(new FlowLayout());
+			buttons.add(comfirm);
+			buttons.add(cancel);
+			stringInput.add(tips, BorderLayout.NORTH);
+			stringInput.add(text, BorderLayout.CENTER);
+			stringInput.add(buttons, BorderLayout.SOUTH);
+			stringInput.setVisible(true);
+
+		} else if (command.equals("Choose")) {
+
+			for (InputString i : user.getStrings()) {
+
+				if ((x1 < i.getX() + 10 && x1 > i.getX() - 10) && (y1 < i.getY() + 10 && y1 > i.getY() - 10)) {
+
+					System.out.println("get graphics.");
+					i.setX(x2);
+					i.setY(y2);
+					System.out.println("changed succeed.");
+
+				}
+			}
+
+			for (ColoredShape s : user.getShapes()) {
+
+				float shapeX = 0;
+				float shapeY = 0;
+				float shapeHeight = 0;
+				float shapeWeight = 0;
+				shapeX = (float) s.getShape().getBounds2D().getX();
+				shapeY = (float) s.getShape().getBounds2D().getY();
+
+				if ((x1 < shapeX + 10 && x1 > shapeX - 10) && (y1 < shapeY + 10 && y1 > shapeY - 10)) {
+
+					System.out.println("get graphic");
+					shapeHeight = (float) s.getShape().getBounds2D().getHeight();
+					shapeWeight = (float) s.getShape().getBounds2D().getWidth();
+					s.getShape().getBounds2D().setRect(x2, y2, shapeWeight, shapeHeight);
+
+				}
+			}
+
 		}
+		TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
+		TempString = new InputString("", Color.WHITE, 0, 0);
 		repaint();
 	}
 
@@ -122,38 +300,72 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		ButtonModel selectedBT = this.funcBG.getSelection();
-		this.command = selectedBT.getActionCommand();
+		this.command = this.funcBG.getSelection().getActionCommand();
 		x = e.getX();
 		y = e.getY();
 		gui.xJLabel.setText("x -> " + x);
 		gui.yJLabel.setText("y -> " + y);
 		System.out.println("Mouse dragged...");
 		if (command.equals("Free draw")) {
-			// pen.drawLine(x1, y1, x, y);
+
+			Line2D line2d = new Line2D.Float(x1, y1, x, y);
+			user.addShape(new ColoredShape(line2d, gui.getPenColor(), gui.getPenStroke()));
 			x1 = x;
 			y1 = y;
 			System.out.println("Free drawing...");
+
 		} else if (command.equals("Erase")) {
-			x = e.getX();
-			y = e.getY();
-			pen.setColor(Color.WHITE);
-			pen.setStroke(new BasicStroke(15));
-			// pen.drawLine(x1, y1, x, y);
+
+			Line2D line2d = new Line2D.Float(x1, y1, x, y);
+			user.addShape(new ColoredShape(line2d, Color.WHITE, gui.getPenStroke()));
 			x1 = x;
 			y1 = y;
 			System.out.println("Erase using...");
+
 		} else if (command.equals("Rectangle")) {
+
 			Rectangle2D rect = new Rectangle2D.Float(Math.min(x, x1), Math.min(y, y1), Math.abs(x - x1),
 					Math.abs(y1 - y));
-            TempColoredShape.shape = rect;
-			TempColoredShape.color = gui.getPenColor();
-			// TODO get stroke from gui
-			TempColoredShape.stroke = new BasicStroke(2);
-			
-			// pen.drawRect(Math.min(x2, x1), Math.min(y2, y1), Math.abs(x2 - x1),
-			// Math.abs(y1 - y2));
+			TempColoredShape.setShape(rect);
+			TempColoredShape.setColor(gui.getPenColor());
+			TempColoredShape.setStroke(gui.getPenStroke());
 			System.out.println("Drawing rect...");
+
+		} else if (command.equals("Circle")) {
+
+			Ellipse2D circle = new Ellipse2D.Float(Math.min(x, x1), Math.min(y, y1), Math.abs(x - x1),
+					Math.abs(x - x1));
+			TempColoredShape.setShape(circle);
+			TempColoredShape.setColor(gui.getPenColor());
+			TempColoredShape.setStroke(gui.getPenStroke());
+			System.out.println("Drawing circle...");
+
+		} else if (command.equals("Oval")) {
+
+			Ellipse2D oval = new Ellipse2D.Float(Math.min(x, x1), Math.min(y, y1), Math.abs(x - x1), Math.abs(y1 - y));
+			TempColoredShape.setShape(oval);
+			TempColoredShape.setColor(gui.getPenColor());
+			TempColoredShape.setStroke(gui.getPenStroke());
+			System.out.println("Drawing oval...");
+
+		} else if (command.equals("Line")) {
+
+			Line2D line = new Line2D.Float(x1, y1, x, y);
+			TempColoredShape.setShape(line);
+			TempColoredShape.setColor(gui.getPenColor());
+			TempColoredShape.setStroke(gui.getPenStroke());
+			System.out.println("Drawing line...");
+
+		} else if (command.equals("Choose")) {
+
+			TempString.setX(x);
+			TempString.setY(y);
+			System.out.println(TempColoredShape);
+			float h = (float) TempColoredShape.getShape().getBounds2D().getHeight();
+			float w = (float) TempColoredShape.getShape().getBounds2D().getWidth();
+			TempColoredShape.getShape().getBounds2D().setRect(x, y, w, h);
+			System.out.println(TempColoredShape);
+
 		}
 		repaint();
 	}
@@ -164,15 +376,4 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 
 	}
 
-    private class ColoredShape {
-        private BasicStroke stroke;
-        private Shape shape;
-        private Color color;
-
-        public ColoredShape(Shape s, Color c, BasicStroke stroke) {
-            this.shape = s;
-            this.color = c;
-            this.stroke = stroke;
-        }
-    }
 }
