@@ -33,10 +33,17 @@ public class InputAddrWindow {
 		this.state = state;
 		this.username = username;
 
+		String titleHost = "Client";
+
+		if (state) {
+			
+			titleHost = "Host";
+			
+		}
 		JFrame jf = new JFrame();
 		jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
-		jf.setTitle("WhiteBoard1.4" + " " + state + " " + username);
+		jf.setTitle("WhiteBoard1.4" + " " + titleHost + " " + username);
 		jf.setBackground(Color.WHITE);
 		jf.setLayout(new BorderLayout());
 		jf.setSize(new Dimension(400, 150));

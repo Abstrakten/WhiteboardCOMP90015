@@ -12,9 +12,9 @@ import javax.swing.*;
 
 public class MyWindowListener implements WindowListener {
 
-	JFrame mainFrame;
+	WhiteBoardGUI mainFrame;
 
-	public MyWindowListener(JFrame jf) {
+	public MyWindowListener(WhiteBoardGUI jf) {
 
 		this.mainFrame = jf;
 	}
@@ -32,12 +32,21 @@ public class MyWindowListener implements WindowListener {
 				JOptionPane.YES_NO_CANCEL_OPTION);
 
 		if (i == 0) {
-			// save
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
+			FileUtil.save(mainFrame.getUsers());
+			if(mainFrame.isNewSessionAvaliable()) {
+				mainFrame.setVisible(false);
+			} else {
+			mainFrame.setVisible(false);
+			//mainFrame.dispose();
+			}
 		} else if(i == 1) {
 			// not save
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			if(mainFrame.isNewSessionAvaliable()) {
+				mainFrame.setVisible(false);
+			} else {
+			mainFrame.setVisible(false);
+			//mainFrame.dispose();
+			}
 		} else {
 			// cancel
 			mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

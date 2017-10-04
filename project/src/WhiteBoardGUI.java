@@ -54,6 +54,9 @@ public class WhiteBoardGUI extends JFrame {
 	public JLabel yJLabel = new JLabel("0");
 	private JPanel drawBoard;
 	private static JTabbedPane tab;
+	private boolean newSessionAvaliable = false;
+	
+
 	
 
 	// frame class constructor.
@@ -93,7 +96,6 @@ public class WhiteBoardGUI extends JFrame {
 		}
 
 		this.setTitle("WhiteBoard 1.4" + " " + titleHost + " " + username);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -427,32 +429,22 @@ public class WhiteBoardGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+				newSessionAvaliable = true;
 				List<User> newUsers = FileUtil.load();
 				WhiteBoardGUI gui = new WhiteBoardGUI(newUsers);
 				gui.initOperationInterface();
+				
 			}
 		});
 		
-//		newSession.addActionListener(new ActionListener() {
-//			int i = 2;
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				List<User> newUsers = new ArrayList<>();
-//				User xin;
-//				try {
-//					xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin", true);
-//					newUsers.add(xin);
-//					WhiteBoardGUI gui = new WhiteBoardGUI(users);
-//					gui.initOperationInterface();
-//				} catch (UnknownHostException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//				
-//				
-//			}
-//		});
+		newSession.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WelcomeWindow welcomeWindow = new WelcomeWindow();
+				welcomeWindow.createOrJoin();
+			}
+		});
 		
 		saveAsMenu.addActionListener(new ActionListener() {
 			
@@ -548,4 +540,21 @@ public class WhiteBoardGUI extends JFrame {
 	public void setDrawBoard(JPanel drawBoard) {
 		this.drawBoard = drawBoard;
 	}
+	
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+	
+	public boolean isNewSessionAvaliable() {
+		return newSessionAvaliable;
+	}
+
+	public void setNewSessionAvaliable(boolean newSessionAvaliable) {
+		this.newSessionAvaliable = newSessionAvaliable;
+	}
+	
 }
