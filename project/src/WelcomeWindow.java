@@ -93,14 +93,14 @@ public class WelcomeWindow {
 				String command = bm.getActionCommand();
 				if (command.equals("1")) {
 					JOptionPane.showMessageDialog(jf,
-							"Please enter the server IP address and the server Port Number", "whiteBoard1.1",
+							"Please enter the server IP address and the server Port Number", "whiteBoard1.4",
 							JOptionPane.INFORMATION_MESSAGE);
 					InputAddrWindow inputAddWin = new InputAddrWindow(true, userNameJTF.getText());
 					jf.setVisible(false);
 					jf.dispose();
 				} else {
 					JOptionPane.showMessageDialog(jf, "Please enter the host's IP address and Port Number",
-							"whiteBoard1.1", JOptionPane.INFORMATION_MESSAGE);
+							"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
 					InputAddrWindow inputAddWin = new InputAddrWindow(false, userNameJTF.getText());
 					jf.setVisible(false);
 					jf.dispose();

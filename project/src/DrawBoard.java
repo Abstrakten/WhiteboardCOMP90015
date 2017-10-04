@@ -2,6 +2,10 @@
 /**
  * @author Xin Qi
  * @version 1.4
+ * 
+ * @comment this class accept a user list from gui class, and will add the shapes and strings to
+ * 					this user on this.userlist, so if any other method need the list, just use getUsers and setUsers.
+ * 					the users are identified by ip address. 
  */
 
 import java.awt.BasicStroke;
@@ -42,12 +46,20 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	public WhiteBoardGUI gui;
 	public static float x, y, x1, y1, x2, y2, cx, cy;
 	private String command;
-	public static List<ColoredShape> shapes = new ArrayList<>();
+	//public static List<ColoredShape> shapes = new ArrayList<>();
 	private ColoredShape TempColoredShape;
 	private InputString TempString;
-	private static List<InputString> strings = new ArrayList<>();
+	//private static List<InputString> strings = new ArrayList<>();
 	private User user;
 	private List<User> users = new ArrayList<>();
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
 	public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI, List<User> users) {
 
@@ -60,11 +72,11 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		this.setBackground(Color.WHITE);
 		this.setPreferredSize(new Dimension(700, 620));
 		this.users = users;
-		for(User user:users) {
+		for (User user : this.users) {
 			try {
 				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
 					this.user = user;
-					System.out.println(user);
+					System.out.println(this.user.toString());
 				}
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -84,30 +96,29 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		this.command = this.funcBG.getSelection().getActionCommand();
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
-		for (InputString i : user.getStrings()) {
+		for (User u : this.users) {
+			for (InputString i : u.getStrings()) {
 
-		
-			g2d.setColor(i.getColor());
-			g2d.drawString(i.getString(), i.getX(), i.getY());
+				g2d.setColor(i.getColor());
+				g2d.drawString(i.getString(), i.getX(), i.getY());
 
+			}
+
+			for (ColoredShape s : u.getShapes()) {
+
+				g2d.setStroke(s.getStroke());
+				g2d.setColor(s.getColor());
+				g2d.draw(s.getShape());
+
+			}
 		}
-
-		for (ColoredShape s : user.getShapes()) {
-
-			g2d.setStroke(s.getStroke());
-			g2d.setColor(s.getColor());
-			g2d.draw(s.getShape());
-
-		}
-
-//		if(command.equals("Choose")) {
-//			AffineTransform transform = new AffineTransform();
-//			transform.translate(x-x1, y-x1);
-//			g2d.translate(x-x1,x-x1);
-//			x1 = x;
-//			y1 = y;
-//		}
+		// if(command.equals("Choose")) {
+		// AffineTransform transform = new AffineTransform();
+		// transform.translate(x-x1, y-x1);
+		// g2d.translate(x-x1,x-x1);
+		// x1 = x;
+		// y1 = y;
+		// }
 		g2d.setStroke(TempColoredShape.getStroke());
 		g2d.setColor(TempColoredShape.getColor());
 		g2d.draw(TempColoredShape.getShape());
@@ -139,10 +150,10 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 					System.out.println("get graphic");
 					TempString.setString(i.getString());
 					TempString.setColor(Color.RED);
-					
 
 				}
 			}
+			
 			for (ColoredShape s : user.getShapes()) {
 
 				float shapeX = 0;
@@ -156,9 +167,10 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 					TempColoredShape.setShape(s.getShape());
 					TempColoredShape.setColor(Color.RED);
 					TempColoredShape.setStroke(s.getStroke());
-				
+
 				}
 			}
+			
 		}
 	}
 
@@ -261,24 +273,26 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 				}
 			}
 
-			for (ColoredShape s : user.getShapes()) {
-
-				float shapeX = 0;
-				float shapeY = 0;
-				float shapeHeight = 0;
-				float shapeWeight = 0;
-				shapeX = (float) s.getShape().getBounds2D().getX();
-				shapeY = (float) s.getShape().getBounds2D().getY();
-
-				if ((x1 < shapeX + 10 && x1 > shapeX - 10) && (y1 < shapeY + 10 && y1 > shapeY - 10)) {
-
-					System.out.println("get graphic");
-					shapeHeight = (float) s.getShape().getBounds2D().getHeight();
-					shapeWeight = (float) s.getShape().getBounds2D().getWidth();
-					s.getShape().getBounds2D().setRect(x2, y2, shapeWeight, shapeHeight);
-
-				}
-			}
+			// TODO the shapes can be chosen but can not be moved, to move it ,the method below may need a little change.
+			// but i don't know how. In mouse pressed method, the shape is already chosen.
+//			for (ColoredShape s : user.getShapes()) {
+//
+//				float shapeX = 0;
+//				float shapeY = 0;
+//				float shapeHeight = 0;
+//				float shapeWeight = 0;
+//				shapeX = (float) s.getShape().getBounds2D().getX();
+//				shapeY = (float) s.getShape().getBounds2D().getY();
+//
+//				if ((x1 < shapeX + 10 && x1 > shapeX - 10) && (y1 < shapeY + 10 && y1 > shapeY - 10)) {
+//
+//					System.out.println("get graphic");
+//					shapeHeight = (float) s.getShape().getBounds2D().getHeight();
+//					shapeWeight = (float) s.getShape().getBounds2D().getWidth();
+//					s.getShape().getBounds2D().setRect(x2, y2, shapeWeight, shapeHeight);
+//
+//				}
+//			}
 
 		}
 		TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));

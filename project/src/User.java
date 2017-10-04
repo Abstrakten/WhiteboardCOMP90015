@@ -34,18 +34,13 @@ public class User implements Serializable {
 	}
 
 	public User(String ip, String port, String username, Boolean host) {
-		try {
-			this.ip = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.ip = ip;
 		this.port = "10086";
 		this.username = username;
 		this.isHost = host;
 	}
 
-	public String toString(User user) {
+	public String toString() {
 
 		return ("UserName: " + username + "\n" + "Is host: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
 				+ port + "\n");
@@ -87,7 +82,7 @@ public class User implements Serializable {
 	public void addShape(ColoredShape s) {
 		this.shapes.add(s);
 	}
-	
+
 	public void addString(InputString i) {
 		this.strings.add(i);
 	}

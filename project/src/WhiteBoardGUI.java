@@ -2,6 +2,9 @@
 /**
  * @author Xin Qi
  * @version 1.4
+ * 
+ * @comment this class is used to initialize the main gui of the program, the new session method(at line 436) still need some changes.
+ * 						this class will pass the users list which is accept from server to drawboard class to achieve some drawing operation.
  */
 
 import java.awt.BasicStroke;
@@ -66,7 +69,7 @@ public class WhiteBoardGUI extends JFrame {
 				
 				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
 					this.user = user;
-					System.out.println(this.user);
+					System.out.println(this.user.toString());
 					
 				}
 			} catch (UnknownHostException e) {
@@ -76,25 +79,26 @@ public class WhiteBoardGUI extends JFrame {
 			}
 		}
 		
-		this.username = user.getUsername();
-		this.ip = user.getIp();
-		this.isHost = user.getState();
-		this.port = user.getPort();
+		this.username = this.user.getUsername();
+		this.ip = this.user.getIp();
+		this.isHost =this.user.getState();
+		this.port = this.user.getPort();
 
 		String titleHost = "Client";
 
 		if (isHost) {
+			
 			titleHost = "Host";
 			
 		}
 
-		this.users.add(this.user);
 		this.setTitle("WhiteBoard 1.4" + " " + titleHost + " " + username);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setMinimumSize(new Dimension(960, 500));
+		
 		this.addWindowListener(new MyWindowListener(this));
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
@@ -129,8 +133,8 @@ public class WhiteBoardGUI extends JFrame {
 		JMenuBar jMenuBar = menuBar();
 
 		setDrawBoard(new DrawBoard(funcBG, colorBG, this, this.users));
-		drawBoard.add(xJLabel);
-		drawBoard.add(yJLabel);
+		this.drawBoard.add(xJLabel);
+		this.drawBoard.add(yJLabel);
 
 		rightMainPnale.add(chatWindow, BorderLayout.WEST);
 		southPanel.add(colorAndFunc, BorderLayout.CENTER);
@@ -140,10 +144,10 @@ public class WhiteBoardGUI extends JFrame {
 		mainPanel.add(rightMainPnale, BorderLayout.EAST);
 		mainPanel.add(leftMainPanel, BorderLayout.CENTER);
 
-		tab.addTab("Untitled", mainPanel);
+		//tab.addTab("Untitled", mainPanel);
 		setPenStroke(new BasicStroke(1));
 		this.setJMenuBar(jMenuBar);
-		this.add(tab);
+		this.add(mainPanel);
 		this.setVisible(true);
 		this.validate();
 
@@ -416,7 +420,7 @@ public class WhiteBoardGUI extends JFrame {
 		jMenuBar.add(fileMenu);
 
 		saveMenu.addActionListener(e->{
-			FileUtil.save(users);
+			FileUtil.save(this.users);
 		});
 		
 		openMenu.addActionListener(new ActionListener() {
@@ -429,23 +433,33 @@ public class WhiteBoardGUI extends JFrame {
 				gui.initOperationInterface();
 			}
 		});
-		newSession.addActionListener(new ActionListener() {
-			int i = 2;
+		
+//		newSession.addActionListener(new ActionListener() {
+//			int i = 2;
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				List<User> newUsers = new ArrayList<>();
+//				User xin;
+//				try {
+//					xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin", true);
+//					newUsers.add(xin);
+//					WhiteBoardGUI gui = new WhiteBoardGUI(users);
+//					gui.initOperationInterface();
+//				} catch (UnknownHostException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//				
+//			}
+//		});
+		
+		saveAsMenu.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<User> newUsers = new ArrayList<>();
-				User xin;
-				try {
-					xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin", true);
-					newUsers.add(xin);
-					WhiteBoardGUI gui = new WhiteBoardGUI(users);
-					gui.initOperationInterface();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
+				// TODO Auto-generated method stub
+				FileUtil.saveAs(users, getDrawBoard());
 			}
 		});
 
@@ -455,6 +469,8 @@ public class WhiteBoardGUI extends JFrame {
 
 	// This is the online list
 	private JPanel onlineList() {
+		
+		// TODO onlineList may need some method in user class.
 		JPopupMenu popupMenu = new JPopupMenu();
 		JList list = new JList();
 		JPanel mainPanel = new JPanel();

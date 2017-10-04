@@ -79,11 +79,17 @@ public class InputAddrWindow {
 					return;
 				}
 				if (testConnect(state, username, jtfIP.getText(), jtfPort.getText()).equals("1")) {
+					
+					// TODO 
 					serverIp = jtfIP.getText();
 					serverPort = jtfPort.getText();
+					
+					
 					User user;
 					try {
 						user = new User(InetAddress.getLocalHost().getHostAddress(), "10086", username, state);
+						
+						// TODO get the users list from server and this user into the list, then transform the whole list to GUI.
 						users.add(user);
 						WhiteBoardGUI gui = new WhiteBoardGUI(users);
 						gui.initOperationInterface();
