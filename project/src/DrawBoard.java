@@ -119,8 +119,8 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		// x1 = x;
 		// y1 = y;
 		// }
-		g2d.setStroke(TempColoredShape.getStroke());
 		g2d.setColor(TempColoredShape.getColor());
+		g2d.setStroke(TempColoredShape.getStroke());
 		g2d.draw(TempColoredShape.getShape());
 		g2d.setColor(TempString.getColor());
 		g2d.drawString(TempString.getString(), TempString.getX(), TempString.getY());
