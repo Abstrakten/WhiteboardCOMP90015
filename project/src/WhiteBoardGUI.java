@@ -135,7 +135,7 @@ public class WhiteBoardGUI extends JFrame {
 		JPanel colorAndFunc = colorAndFunc();
 		JPanel chatWindow = chatWindow();
 		JPanel colorAndStroke = colorAndStroke();
-		JMenuBar jMenuBar = menuBar();
+		JMenuBar jMenuBar = menuBar(this.users);
 
 		setDrawBoard(new DrawBoard(funcBG, colorBG, this, this.users));
 		/*
@@ -281,9 +281,9 @@ public class WhiteBoardGUI extends JFrame {
 		String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
 
 		for (int i = 0; i < 7; i++) {
-			ImageIcon img = new ImageIcon(this.getClass().getResource("icons/" + funcBT[i] + ".png"));
+			ImageIcon img = new ImageIcon(this.getClass().getResource(funcBT[i] + ".png"));
 			JRadioButton funcButton = new JRadioButton(img);
-			ImageIcon img2 = new ImageIcon(this.getClass().getResource("icons/" + funcBT[i] + "2.png"));
+			ImageIcon img2 = new ImageIcon(this.getClass().getResource(funcBT[i] + "2.png"));
 			funcButton.setSelectedIcon(img2);
 			funcButton.setActionCommand(funcBT[i]);
 			funcBG.add(funcButton);
@@ -291,9 +291,9 @@ public class WhiteBoardGUI extends JFrame {
 		}
 
 		// define default button.
-		ImageIcon img = new ImageIcon(this.getClass().getResource("icons/Draw.png"));
+		ImageIcon img = new ImageIcon(this.getClass().getResource("Draw.png"));
 		JRadioButton funcButton1 = new JRadioButton(img, true);
-		ImageIcon img2 = new ImageIcon(this.getClass().getResource("icons/Draw2.png"));
+		ImageIcon img2 = new ImageIcon(this.getClass().getResource("Draw2.png"));
 		funcButton1.setSelectedIcon(img2);
 		funcButton1.setActionCommand("Free draw");
 		funcBG.add(funcButton1);
@@ -422,7 +422,7 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-	private JMenuBar menuBar() {
+	private JMenuBar menuBar(List<User> u) {
 
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newSession = new JMenuItem("New File");
@@ -469,6 +469,9 @@ public class WhiteBoardGUI extends JFrame {
 
 		closeMenu.addActionListener(e -> {
 			// use thread to avoid influence between different windows.
+            if (JOptionPane.showConfirmDialog(null, "Do you want to save changes?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                FileUtil.save(u);
+            }
 			if (this.isNewSessionAvaliable()) {
 				this.setVisible(false);
 			} else {
