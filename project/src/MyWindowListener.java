@@ -37,7 +37,7 @@ public class MyWindowListener implements WindowListener {
 				mainFrame.setVisible(false);
 			} else {
 			mainFrame.setVisible(false);
-			//mainFrame.dispose();
+			mainFrame.dispose();
 			}
 		} else if(i == 1) {
 			// not save
@@ -45,7 +45,7 @@ public class MyWindowListener implements WindowListener {
 				mainFrame.setVisible(false);
 			} else {
 			mainFrame.setVisible(false);
-			//mainFrame.dispose();
+			mainFrame.dispose();
 			}
 		} else {
 			// cancel
