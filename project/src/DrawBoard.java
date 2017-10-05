@@ -119,26 +119,34 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		// x1 = x;
 		// y1 = y;
 		// }
-		g2d.setColor(TempColoredShape.getColor());
 		g2d.setStroke(TempColoredShape.getStroke());
+        g2d.setColor(TempColoredShape.getColor());
 		g2d.draw(TempColoredShape.getShape());
 		g2d.setColor(TempString.getColor());
 		g2d.drawString(TempString.getString(), TempString.getX(), TempString.getY());
-
+      
+        if (command.equals("Clear")){
+            g.fillRect(0,0,900,620);
+            user.delAll();
+        } else if (command.equals("Undo")){
+            user.undoShape();
+        }else if (command.equals("Redo")){
+            user.redoShape();
+        }
+        
 		this.validate();
-
+        
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+        // TODO Auto-generated method stub
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 
 		this.command = this.funcBG.getSelection().getActionCommand();
-
 		x1 = e.getX();
 		y1 = e.getY();
 		System.out.println("Mouse pressed...");
@@ -172,6 +180,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			}
 			
 		}
+        repaint();
 	}
 
 	@Override
@@ -215,12 +224,12 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			stringInput.setResizable(false);
 			stringInput.setLayout(new BorderLayout());
 			JLabel tips = new JLabel("What do you want to text?");
-			JButton comfirm = new JButton("Confirm");
+			JButton confirm = new JButton("Confirm");
 			JButton cancel = new JButton("Cancel");
 			JTextArea text = new JTextArea();
 			text.setEditable(true);
 			text.setRequestFocusEnabled(true);
-			comfirm.addActionListener(new ActionListener() {
+			confirm.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -252,7 +261,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 
 			JPanel buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
-			buttons.add(comfirm);
+			buttons.add(confirm);
 			buttons.add(cancel);
 			stringInput.add(tips, BorderLayout.NORTH);
 			stringInput.add(text, BorderLayout.CENTER);
@@ -271,8 +280,8 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 					System.out.println("changed succeed.");
 
 				}
-			}
-
+            }
+            
 			// TODO the shapes can be chosen but can not be moved, to move it ,the method below may need a little change.
 			// but i don't know how. In mouse pressed method, the shape is already chosen.
 //			for (ColoredShape s : user.getShapes()) {
@@ -295,6 +304,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 //			}
 
 		}
+        
 		TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
 		TempString = new InputString("", Color.WHITE, 0, 0);
 		repaint();
@@ -309,7 +319,6 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -380,14 +389,13 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			TempColoredShape.getShape().getBounds2D().setRect(x, y, w, h);
 			System.out.println(TempColoredShape);
 
-		}
+        }
 		repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -14,6 +14,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Toolkit;
+import java.awt.Graphics2D;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
 // using swing and awt extends JFrame.
@@ -55,6 +60,7 @@ public class WhiteBoardGUI extends JFrame {
 	private JPanel drawBoard;
 	private static JTabbedPane tab;
 	private boolean newSessionAvaliable = false;
+    public JRadioButton funcButtonClr,funcButtonUndo,funcButtonRedo;
 	
 
 	
@@ -121,8 +127,8 @@ public class WhiteBoardGUI extends JFrame {
 		JPanel leftMainPanel = new JPanel();
 		leftMainPanel.setLayout(new BorderLayout());
 
-		JPanel rightMainPnale = new JPanel();
-		rightMainPnale.setLayout(new BorderLayout());
+		JPanel rightMainPanel = new JPanel();
+		rightMainPanel.setLayout(new BorderLayout());
 
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
@@ -135,15 +141,15 @@ public class WhiteBoardGUI extends JFrame {
 		JMenuBar jMenuBar = menuBar();
 
 		setDrawBoard(new DrawBoard(funcBG, colorBG, this, this.users));
-		this.drawBoard.add(xJLabel);
-		this.drawBoard.add(yJLabel);
+		/*this.drawBoard.add(xJLabel);
+		this.drawBoard.add(yJLabel);*/
 
-		rightMainPnale.add(chatWindow, BorderLayout.WEST);
+		rightMainPanel.add(chatWindow, BorderLayout.WEST);
 		southPanel.add(colorAndFunc, BorderLayout.CENTER);
 		southPanel.add(colorAndStroke, BorderLayout.EAST);
 		leftMainPanel.add(drawBoard, BorderLayout.CENTER);
 		leftMainPanel.add(southPanel, BorderLayout.SOUTH);
-		mainPanel.add(rightMainPnale, BorderLayout.EAST);
+		mainPanel.add(rightMainPanel, BorderLayout.EAST);
 		mainPanel.add(leftMainPanel, BorderLayout.CENTER);
 
 		//tab.addTab("Untitled", mainPanel);
@@ -277,17 +283,32 @@ public class WhiteBoardGUI extends JFrame {
 		String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
 
 		for (int i = 0; i < 7; i++) {
-			JRadioButton funcButton = new JRadioButton(funcBT[i]);
+            ImageIcon img = new ImageIcon(this.getClass().getResource("icons/"+funcBT[i]+".png"));
+			JRadioButton funcButton = new JRadioButton(img);
+            ImageIcon img2 = new ImageIcon(this.getClass().getResource("icons/"+funcBT[i]+"2.png"));
+            funcButton.setSelectedIcon(img2);
 			funcButton.setActionCommand(funcBT[i]);
 			funcBG.add(funcButton);
 			functionP.add(funcButton);
 		}
 
 		// define default button.
-		JRadioButton funcButton5 = new JRadioButton("Free draw", true);
-		funcButton5.setActionCommand("Free draw");
-		funcBG.add(funcButton5);
-		functionP.add(funcButton5);
+        ImageIcon img = new ImageIcon(this.getClass().getResource("icons/Draw.png"));
+		JRadioButton funcButton1 = new JRadioButton(img, true);
+        ImageIcon img2 = new ImageIcon(this.getClass().getResource("icons/Draw2.png"));
+        funcButton1.setSelectedIcon(img2);
+		funcButton1.setActionCommand("Free draw");
+		funcBG.add(funcButton1);
+		functionP.add(funcButton1);
+        funcButtonClr = new JRadioButton("");
+        funcButtonClr.setActionCommand("Clear");
+        funcBG.add(funcButtonClr);
+        funcButtonUndo = new JRadioButton("");
+        funcButtonUndo.setActionCommand("Undo");
+        funcBG.add(funcButtonUndo);
+        funcButtonRedo = new JRadioButton("");
+        funcButtonRedo.setActionCommand("Redo");
+        funcBG.add(funcButtonRedo);
 
 		// defining 15 colors in a color list.
 		Color colors[] = { new Color(0, 30, 40), new Color(98, 14, 13), new Color(123, 14, 3), new Color(50, 60, 100),
@@ -309,7 +330,7 @@ public class WhiteBoardGUI extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					setPenColor(colorButton.getBackground());
-					System.out.println("color chosed " + "R:" + getPenColor().getRed() + " G:"
+					System.out.println("color chosen " + "R:" + getPenColor().getRed() + " G:"
 							+ getPenColor().getGreen() + " B:" + getPenColor().getBlue());
 				}
 			});
@@ -332,7 +353,7 @@ public class WhiteBoardGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setPenColor(colorButton1.getBackground());
-				System.out.println("color chosed");
+				System.out.println("color chosen");
 			}
 		});
 
@@ -409,7 +430,7 @@ public class WhiteBoardGUI extends JFrame {
 		JMenuItem newSession = new JMenuItem("New File");
 		JMenuItem openMenu = new JMenuItem("Open");
 		JMenuItem saveMenu = new JMenuItem("Save");
-		JMenuItem saveAsMenu = new JMenuItem("Save As");
+		JMenuItem saveAsMenu = new JMenuItem("Export to Image");
 		JMenuItem closeMenu = new JMenuItem("Close");
 		JMenuItem about = new JMenuItem("About");
 		fileMenu.add(newSession);
@@ -418,9 +439,20 @@ public class WhiteBoardGUI extends JFrame {
 		fileMenu.add(saveAsMenu);
 		fileMenu.add(closeMenu);
 		fileMenu.add(about);
+        JMenu editMenu = new JMenu("Edit");
+        JMenuItem undoOption = new JMenuItem("Undo");
+        undoOption.setAccelerator(KeyStroke.getKeyStroke('Z', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+        JMenuItem redoOption = new JMenuItem("Redo");
+        redoOption.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+        JMenuItem clrOption = new JMenuItem("Erase Board");
+        clrOption.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+        editMenu.add(undoOption);
+        editMenu.add(redoOption);
+        editMenu.add(clrOption);
 		JMenuBar jMenuBar = new JMenuBar();
 		jMenuBar.add(fileMenu);
-
+        jMenuBar.add(editMenu);
+        
 		saveMenu.addActionListener(e->{
 			FileUtil.save(this.users);
 		});
@@ -436,6 +468,15 @@ public class WhiteBoardGUI extends JFrame {
 				
 			}
 		});
+        
+        closeMenu.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e){
+                //code to close window
+            }
+            
+        });
 		
 		newSession.addActionListener(new ActionListener() {
 		
@@ -454,7 +495,49 @@ public class WhiteBoardGUI extends JFrame {
 				FileUtil.saveAs(users, getDrawBoard());
 			}
 		});
+        
+        about.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "WhiteBoard 1.4 is a shared whiteboard application that allows users \nto draw simultaneously, as well as chat with other users on the board.\nThe application supports shapes (line,circle,oval,rectangle,as well as \nfree draw and text. It also allows the users to export the whiteboard \nto an image file(JPG).";
+                String credit = "Developed by \nKasper, Marc, Navnita and Xin \n(Assignment 2 - COMP90015)";
+                JOptionPane.showMessageDialog(null, msg+"\n\n"+credit, "About WhiteBoard 1.4", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        
+        undoOption.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                funcButtonUndo.setSelected(true);
+                drawBoard.repaint();
+                System.out.println("Undo...");
+            }
+        });
 
+        redoOption.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                funcButtonRedo.setSelected(true);
+                drawBoard.repaint();
+                System.out.println("Redo...");
+            }
+        });
+        
+        clrOption.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to erase the board?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    funcButtonClr.setSelected(true);
+                    drawBoard.repaint();
+                    System.out.println("Clearing board...");
+                }
+            }
+        });
+        
 		return jMenuBar;
 
 	}
