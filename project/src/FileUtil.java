@@ -13,16 +13,7 @@ public class FileUtil {
     private static boolean saved = false;
     private static File existFile;
 
-//    public FileUtil(User user){
-//        this.user = user;
-//    JOptionPane.showMessageDialog(null, "IP and PORT can not be null!", "whiteBoard1.4",
-//    JOptionPane.INFORMATION_MESSAGE);
-// FileNameExtensionFilter filter = new FileNameExtensionFilter(
-
-                //"Images, WB", "jpg", "wb");
-//    }
-
-    public static void save(List<User> users) {
+    public static void save(User user) {
         if (!saved) {
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
@@ -37,7 +28,7 @@ public class FileUtil {
                     }
                     FileOutputStream fos = new FileOutputStream(file);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(users);
+                    oos.writeObject(user);
                     oos.close();
                     fos.close();
 
@@ -45,7 +36,7 @@ public class FileUtil {
                     saved = true;
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null, "IO Exception catch, Save fail",
-                            "whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
+                            "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
                     e.printStackTrace();
 
                 }
@@ -54,18 +45,18 @@ public class FileUtil {
             try {
                 FileOutputStream fos = new FileOutputStream(existFile);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(users);
+                oos.writeObject(user);
                 oos.close();
                 fos.close();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "IO Exception catch, Save fail",
-                        "whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
+                        "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
     }
 
-    public static void saveAs(List<User> users, JPanel jPanel){
+    public static void saveAs(User user, JPanel jPanel){
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
         FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image File(*.jpg)", "jpg");
@@ -84,7 +75,7 @@ public class FileUtil {
                     }
                     fos = new FileOutputStream(file);
                     oos = new ObjectOutputStream(fos);
-                    oos.writeObject(users);
+                    oos.writeObject(user);
                     oos.close();
                     fos.close();
 
@@ -105,25 +96,25 @@ public class FileUtil {
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "IO Exception catch, Save fail",
-                        "whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
+                        "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
                 e.printStackTrace();
 
             }
         }
     }
 
-    public static List<User> load() {
+    public static User load() {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
         chooser.setFileFilter(wbFilter);
         int option = chooser.showDialog(null, "Open");
-        List<User> users = new ArrayList<>();
+        User user = null;
         if(option == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = chooser.getSelectedFile();
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                users = (List<User>) ois.readObject();
+                user = (User) ois.readObject();
                 fis.close();
                 ois.close();
 
@@ -131,11 +122,11 @@ public class FileUtil {
                 existFile = file;
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(null, "Load fail",
-                        "whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
+                        "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
                 e.printStackTrace();
             }
         }
-        return users;
+        return user;
     }
 
     public static File getExistFile() {

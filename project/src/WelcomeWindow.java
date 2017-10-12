@@ -3,118 +3,96 @@
  * @version 1.4
  */
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
+import javax.sound.sampled.Port;
+import javax.swing.*;
+import javax.swing.text.FlowView;
 
 
 public class WelcomeWindow {
 
-//    public enum state { HOST, CLIENT }
-
 	public void createOrJoin() {
 
 		JFrame jf = new JFrame();
-		jf.setTitle("WhiteBoard 1.4");
+		jf.setTitle("WhiteBoard");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setSize(new Dimension(400, 150));
+		jf.setSize(new Dimension(500, 200));
 		jf.setResizable(false);
 		jf.setLocationRelativeTo(null);
 		jf.setLayout(new BorderLayout());
 
-		JPanel jp1 = new JPanel();
-		JPanel jp2 = new JPanel();
-		JPanel jp1_2 = new JPanel();
-		JPanel jp3 = new JPanel();
+		// input panel
+        JPanel InputPanel = new JPanel();
+        InputPanel.setLayout(new BoxLayout(InputPanel,BoxLayout.PAGE_AXIS));
 
-		jp1.setLayout(new FlowLayout(FlowLayout.CENTER));
-		jp1.setBackground(Color.WHITE);
-		jp2.setLayout(new FlowLayout(FlowLayout.CENTER));
-		jp2.setBackground(Color.WHITE);
-		jp1_2.setBackground(Color.WHITE);
-		jp3.setLayout(new FlowLayout(FlowLayout.CENTER));
-		jp3.setBackground(Color.WHITE);
+        // name input
+		JPanel UsernamePanel = new JPanel();
+        UsernamePanel.setLayout(new BorderLayout());
+        JTextField nameField = new JTextField(20);
+        UsernamePanel.add(new JLabel("Username:"), BorderLayout.LINE_START);
+        UsernamePanel.add(nameField, BorderLayout.LINE_END);
+        InputPanel.add(UsernamePanel);
 
-		JLabel userNameJL = new JLabel("Username");
-		JTextField userNameJTF = new JTextField(20);
-		jp1.add(userNameJL, FlowLayout.LEFT);
-		jp1.add(userNameJTF, FlowLayout.CENTER);
+        // ip input
+        JPanel IPPanel = new JPanel();
+        IPPanel.setLayout(new BorderLayout());
+        JTextField ipField = new JTextField(20);
+        IPPanel.add(new JLabel("IP Address:"), BorderLayout.LINE_START);
+        IPPanel.add(ipField, BorderLayout.LINE_END);
+        InputPanel.add(IPPanel);
 
-		JRadioButton createBT = new JRadioButton("Create a new whiteboard");
-		JRadioButton joinBT = new JRadioButton("Join an exist whiteboard");
-		createBT.setActionCommand("1");
-		joinBT.setActionCommand("0");
-		ButtonGroup createOrJoinBG = new ButtonGroup();
-		createBT.setSelected(true);
+        // port input
+        JPanel PortPanel = new JPanel();
+        PortPanel.setLayout(new BorderLayout());
+        JTextField portField = new JTextField(20);
+        PortPanel.add(new JLabel("Port:"), BorderLayout.LINE_START);
+        PortPanel.add(portField, BorderLayout.LINE_END);
+        InputPanel.add(PortPanel);
 
-		JButton confirmBT = new JButton("Confirm");
-		JButton cancelBT = new JButton("Cancel");
-		confirmBT.setActionCommand("Confirm");
-		cancelBT.setActionCommand("Cancel");
-		jp3.add(confirmBT, FlowLayout.LEFT);
-		jp3.add(cancelBT, FlowLayout.CENTER);
+        // Join or create buttons group
+        JRadioButton createBT = new JRadioButton("Create a new whiteboard");
+        JRadioButton joinBT = new JRadioButton("Join an existing whiteboard");
+        createBT.setActionCommand("host");
+        joinBT.setActionCommand("client");
+        createBT.setSelected(true);
+        ButtonGroup createOrJoinBG = new ButtonGroup();
+        createOrJoinBG.add(joinBT);
+        createOrJoinBG.add(createBT);
 
-		createOrJoinBG.add(joinBT);
-		createOrJoinBG.add(createBT);
-		jp2.add(joinBT, FlowLayout.LEFT);
-		jp2.add(createBT, FlowLayout.CENTER);
+        // Join or create button panel
+		JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+        buttonPanel.add(joinBT);
+        buttonPanel.add(createBT);
 
-		jp1_2.add(jp1, BorderLayout.CENTER);
-		jp1_2.add(jp2,BorderLayout.SOUTH);
+		JPanel nameAndRadioPanel = new JPanel();
+        nameAndRadioPanel.setBackground(Color.WHITE);
+        nameAndRadioPanel.add(InputPanel, BorderLayout.CENTER);
+        nameAndRadioPanel.add(buttonPanel,BorderLayout.SOUTH);
 
-		jf.add(jp1_2, BorderLayout.CENTER);
-		jf.add(jp3, BorderLayout.SOUTH);
+        JButton confirmBT = new JButton("Launch Whiteboard");
 
-		confirmBT.addActionListener(new ActionListener() {
+		jf.add(nameAndRadioPanel, BorderLayout.CENTER);
+		jf.add(confirmBT, BorderLayout.SOUTH);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(userNameJTF.getText().trim().isEmpty()) {
-					JOptionPane.showMessageDialog(jf,
-							"Username can not be null!", "whiteBoard1.1",
-							JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				ButtonModel bm = createOrJoinBG.getSelection();
-				String command = bm.getActionCommand();
-				if (command.equals("1")) {
-					JOptionPane.showMessageDialog(jf,
-							"Please enter the server IP address and the server Port Number", "whiteBoard1.4",
-							JOptionPane.INFORMATION_MESSAGE);
-					InputAddrWindow inputAddWin = new InputAddrWindow(true, userNameJTF.getText());
-					jf.setVisible(false);
-					jf.dispose();
-				} else {
-					JOptionPane.showMessageDialog(jf, "Please enter the host's IP address and Port Number",
-							"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
-					InputAddrWindow inputAddWin = new InputAddrWindow(false, userNameJTF.getText());
-					jf.setVisible(false);
-					jf.dispose();
-				}
-			}
-		});
+		confirmBT.addActionListener(e -> {
 
-		cancelBT.addActionListener(new ActionListener() {
+		    // TODO input validation on ip and port
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+            if(nameField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(jf,
+                        "A username is required", "whiteBoard",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                User user = new User(ipField.getText(), portField.getText(), nameField.getText(),
+                        createOrJoinBG.getSelection().getActionCommand().equals("host"));
+                WhiteBoardGUI gui = new WhiteBoardGUI(user);
+                jf.dispose();
+            }
+        });
+
 		jf.setVisible(true);
 	}
 

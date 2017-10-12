@@ -5,51 +5,46 @@
  
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.security.cert.PKIXRevocationChecker.Option;
 
-import javax.management.OperationsException;
 import javax.swing.*;
 
 public class MyWindowListener implements WindowListener {
 
-	WhiteBoardGUI mainFrame;
+	WhiteBoardGUI gui;
 
-	public MyWindowListener(WhiteBoardGUI jf) {
-
-		this.mainFrame = jf;
+	public MyWindowListener(WhiteBoardGUI gui) {
+		this.gui = gui;
 	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-
-		int i = JOptionPane.showConfirmDialog(mainFrame, "Do you want to save the changes?", "WhiteBoard1.4",
+		int i = JOptionPane.showConfirmDialog(gui, "Do you want to save the changes?", "WhiteBoard",
 				JOptionPane.YES_NO_CANCEL_OPTION);
 
 		if (i == 0) {
-			FileUtil.save(mainFrame.getUsers());
-			if(mainFrame.isNewSessionAvaliable()) {
-				mainFrame.setVisible(false);
+			FileUtil.save(gui.getUser());
+			if(gui.isNewSessionAvailable()) {
+				gui.setVisible(false);
 			} else {
-			mainFrame.setVisible(false);
-			mainFrame.dispose();
+			gui.setVisible(false);
+			gui.dispose();
 			}
 		} else if(i == 1) {
 			// not save
-			if(mainFrame.isNewSessionAvaliable()) {
-				mainFrame.setVisible(false);
+			if(gui.isNewSessionAvailable()) {
+				gui.setVisible(false);
 			} else {
-			mainFrame.setVisible(false);
-			mainFrame.dispose();
+			gui.setVisible(false);
+			gui.dispose();
 			}
 		} else {
 			// cancel
-			mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			gui.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 
 	}

@@ -53,15 +53,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	private User user;
 	private List<User> users = new ArrayList<>();
 
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
-	public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI, List<User> users) {
+	public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI) {
 
 		this.TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
 		this.TempString = new InputString("", Color.WHITE, 0, 0);
@@ -71,7 +63,9 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		this.setLayout(new FlowLayout());
 		this.setBackground(Color.WHITE);
 		this.setPreferredSize(new Dimension(700, 620));
-		this.users = users;
+
+		// TODO Not sure what we are doing here, but it does not seem like a thing that should be in drawboard
+/*		this.users = users;
 		for (User user : this.users) {
 			try {
 				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
@@ -79,29 +73,24 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 					System.out.println(this.user.toString());
 				}
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		repaint();
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		System.out.println("draw board initial complete...");
-
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
 		this.command = this.funcBG.getSelection().getActionCommand();
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		for (User u : this.users) {
 			for (InputString i : u.getStrings()) {
-
 				g2d.setColor(i.getColor());
 				g2d.drawString(i.getString(), i.getX(), i.getY());
-
 			}
 
 			for (ColoredShape s : u.getShapes()) {
@@ -218,7 +207,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			System.out.println("Drawing oval...");
 
 		} else if (command.equals("Text")) {
-			JFrame stringInput = new JFrame("White Board1.4 Text");
+			JFrame stringInput = new JFrame("White Board Text");
 			stringInput.setLocationRelativeTo(null);
 			stringInput.setSize(300, 150);
 			stringInput.setResizable(false);
@@ -229,28 +218,23 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 			JTextArea text = new JTextArea();
 			text.setEditable(true);
 			text.setRequestFocusEnabled(true);
-			confirm.addActionListener(new ActionListener() {
+			confirm.addActionListener(e1 -> {
+                if (text.getText().trim().isEmpty()) {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (text.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(stringInput,
+                            "Text can not be null, if you want cancel " + "\nthis operation, please click cancel.",
+                            "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
 
-						JOptionPane.showMessageDialog(stringInput,
-								"Text can not be null, if you want cancel " + "\nthis operation, please click cancel.",
-								"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
-						return;
+                } else {
 
-					} else {
+                    String userText;
+                    userText = text.getText();
+                    user.addString(new InputString(userText, gui.getPenColor(), x1, y1));
+                    stringInput.dispose();
+                    repaint();
 
-						String userText;
-						userText = text.getText();
-						user.addString(new InputString(userText, gui.getPenColor(), x1, y1));
-						stringInput.dispose();
-						repaint();
-
-					}
-				}
-			});
+                }
+            });
 			cancel.addActionListener(new ActionListener() {
 
 				@Override

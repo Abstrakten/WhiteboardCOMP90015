@@ -40,7 +40,7 @@ public class User implements Serializable {
 
 	public User(String ip, String port, String username, Boolean host) {
 		this.ip = ip;
-		this.port = "10086";
+		this.port = port;
 		this.username = username;
 		this.isHost = host;
 	}

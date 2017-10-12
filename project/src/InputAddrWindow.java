@@ -49,8 +49,8 @@ public class InputAddrWindow {
 		jf.setSize(new Dimension(400, 150));
 		jf.setResizable(false);
 
-		JPanel jp1 = new JPanel();
-		JPanel jp2 = new JPanel();
+		JPanel IPPanel = new JPanel();
+		JPanel PortPanel = new JPanel();
 		JPanel jp3 = new JPanel();
 		JLabel labelIp = new JLabel("  IP Address ");
 		JTextField jtfIP = new JTextField(20);
@@ -58,18 +58,18 @@ public class InputAddrWindow {
 		JTextField jtfPort = new JTextField(20);
 		JButton connectBT = new JButton("Connect");
 		JButton cancelBT = new JButton("Cancel");
-		jp1.setBackground(Color.WHITE);
-		jp1.setLayout(new FlowLayout(FlowLayout.CENTER));
-		jp2.setBackground(Color.WHITE);
-		jp2.setLayout(new FlowLayout(FlowLayout.CENTER));
+		IPPanel.setBackground(Color.WHITE);
+		IPPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		PortPanel.setBackground(Color.WHITE);
+		PortPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		jp3.setBackground(Color.WHITE);
 		jp3.setLayout(new FlowLayout(FlowLayout.CENTER));
-		jp1.add(labelIp);
-		jp1.add(jtfIP);
-		jf.add(jp1, BorderLayout.NORTH);
-		jp2.add(labelPort);
-		jp2.add(jtfPort);
-		jf.add(jp2, BorderLayout.CENTER);
+		IPPanel.add(labelIp);
+		IPPanel.add(jtfIP);
+		jf.add(IPPanel, BorderLayout.NORTH);
+		PortPanel.add(labelPort);
+		PortPanel.add(jtfPort);
+		jf.add(PortPanel, BorderLayout.CENTER);
 		jp3.add(connectBT);
 		jp3.add(cancelBT);
 		jf.add(jp3, BorderLayout.SOUTH);
@@ -97,9 +97,7 @@ public class InputAddrWindow {
 						user = new User(InetAddress.getLocalHost().getHostAddress(), "10086", username, state);
 						
 						// TODO get the users list from server and this user into the list, then transform the whole list to GUI.
-						users.add(user);
-						WhiteBoardGUI gui = new WhiteBoardGUI(users);
-						gui.initOperationInterface();
+						WhiteBoardGUI gui = new WhiteBoardGUI(user);
 						jf.dispose();
 					} catch (UnknownHostException e1) {
 						// TODO Auto-generated catch block
@@ -109,18 +107,11 @@ public class InputAddrWindow {
 					JOptionPane.showMessageDialog(jf,
 							testConnect(state, username, jtfIP.getText(), jtfPort.getText()) + "..."
 									+ "Please check the IP and PORT address then retry...", //
-							"whiteBoard1.4", JOptionPane.INFORMATION_MESSAGE);
-					return;
+							"whiteBoard", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
-		cancelBT.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				jf.dispose();
-			}
-		});
+		cancelBT.addActionListener(e -> jf.dispose());
 	}
 
 	protected String testConnect(Boolean state, String username, String ipAddress, String portAddress) {
