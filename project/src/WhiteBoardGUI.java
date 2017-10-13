@@ -3,8 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -40,7 +38,7 @@ public class WhiteBoardGUI extends JFrame {
 	private ButtonGroup funcBG, colorBG;
 	public JLabel xJLabel = new JLabel("0");
 	public JLabel yJLabel = new JLabel("0");
-	private JPanel drawBoard;
+	private DrawBoard drawboard;
 	private static JTabbedPane tab;
 	private boolean newSessionAvailable = false;
 	public JRadioButton funcButtonClr, funcButtonUndo, funcButtonRedo;
@@ -98,12 +96,12 @@ public class WhiteBoardGUI extends JFrame {
         JPanel colorAndStroke = colorAndStroke();
         JMenuBar jMenuBar = menuBar();
 
-        drawBoard = new DrawBoard(funcBG, colorBG, this);
+        drawboard = new DrawBoard(funcBG, colorBG, this);
 
         rightMainPanel.add(chatWindow, BorderLayout.WEST);
         southPanel.add(colorAndFunc, BorderLayout.CENTER);
         southPanel.add(colorAndStroke, BorderLayout.EAST);
-        leftMainPanel.add(drawBoard, BorderLayout.CENTER);
+        leftMainPanel.add(drawboard, BorderLayout.CENTER);
         leftMainPanel.add(southPanel, BorderLayout.SOUTH);
         mainPanel.add(rightMainPanel, BorderLayout.EAST);
         mainPanel.add(leftMainPanel, BorderLayout.CENTER);
@@ -175,11 +173,11 @@ public class WhiteBoardGUI extends JFrame {
                 jf.dispose();
                 System.out.println("Stroke is: " + getPenStroke());
             });
-            JPanel confrimAndCancel = new JPanel();
-            confrimAndCancel.setLayout(new FlowLayout());
-            confrimAndCancel.add(strokeConfirm);
-            confrimAndCancel.add(strokeCancel);
-            jf.add(confrimAndCancel, BorderLayout.SOUTH);
+            JPanel confirmAndCancel = new JPanel();
+            confirmAndCancel.setLayout(new FlowLayout());
+            confirmAndCancel.add(strokeConfirm);
+            confirmAndCancel.add(strokeCancel);
+            jf.add(confirmAndCancel, BorderLayout.SOUTH);
             jf.setVisible(true);
         });
 		cAndS.add(stroke, BorderLayout.SOUTH);
@@ -215,7 +213,7 @@ public class WhiteBoardGUI extends JFrame {
 
 		// define each functional button as a JRadioButton, which means in the same
 		// group, only one button could be selected.
-		String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
+        String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
 
 		for (int i = 0; i < 7; i++) {
 			ImageIcon img = new ImageIcon(this.getClass().getResource(funcBT[i] + ".png"));
@@ -307,7 +305,7 @@ public class WhiteBoardGUI extends JFrame {
 
 		// define text area and a label on screen.
 		JTextArea screen = new JTextArea();
-		JLabel screenLable = new JLabel("Chat History", JLabel.CENTER);
+		JLabel screenLabel = new JLabel("Chat History", JLabel.CENTER);
 
 		// define and set a new scroll container to contain the text screen panel.
 		JScrollPane js = new JScrollPane(screen);
@@ -337,7 +335,7 @@ public class WhiteBoardGUI extends JFrame {
 		sendingWindow.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
 		// construct the chat panel.
-		chatScreen.add(screenLable, BorderLayout.NORTH);
+		chatScreen.add(screenLabel, BorderLayout.NORTH);
 		chatScreen.add(js, BorderLayout.CENTER);
 		chatScreen.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		chatP.add(sendingWindow, BorderLayout.SOUTH);
@@ -376,15 +374,15 @@ public class WhiteBoardGUI extends JFrame {
 		jMenuBar.add(editMenu);
 
 		saveMenu.addActionListener(e -> {
-		    // TODO save only file, not entire user
-			FileUtil.save(this.user);
+			FileUtil.save(drawboard.shapes);
 		});
 
 		openMenu.addActionListener(e -> {
             newSessionAvailable = true;
-            User newUser = FileUtil.load();
+            drawboard.shapes = FileUtil.load();
+            drawboard.repaint();
             // TODO may not open in a new window?
-            WhiteBoardGUI gui = new WhiteBoardGUI(newUser);
+            //WhiteBoardGUI gui = new WhiteBoardGUI(newUser);
 
         });
 
@@ -392,7 +390,7 @@ public class WhiteBoardGUI extends JFrame {
 		    // TODO is the comment below a todo?
 			// use thread to avoid influence between different windows.
             if (JOptionPane.showConfirmDialog(null,"Do you want to save changes?", "WARNING", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                FileUtil.save(this.user);
+                FileUtil.save(drawboard.shapes);
             }
 			if (this.isNewSessionAvailable()) {
 				this.setVisible(false);
@@ -408,7 +406,7 @@ public class WhiteBoardGUI extends JFrame {
         });
 
 		saveAsMenu.addActionListener(e -> {
-            FileUtil.saveAs(user, getDrawBoard());
+            FileUtil.saveAs(drawboard.shapes, getDrawboard());
         });
 
 		about.addActionListener(e -> {
@@ -419,14 +417,18 @@ public class WhiteBoardGUI extends JFrame {
         });
 
 		undoOption.addActionListener(e -> {
+		    // TODO not sure if we want undo/redo to de-select a figure
             funcButtonUndo.setSelected(true);
-            drawBoard.repaint();
+            drawboard.Undo();
+            drawboard.repaint();
             System.out.println("Undo...");
         });
 
 		redoOption.addActionListener(e -> {
+            // TODO not sure if we want undo/redo to de-select a figure
             funcButtonRedo.setSelected(true);
-            drawBoard.repaint();
+            drawboard.Redo();
+            drawboard.repaint();
             System.out.println("Redo...");
         });
 
@@ -434,7 +436,7 @@ public class WhiteBoardGUI extends JFrame {
             if (JOptionPane.showConfirmDialog(null, "Are you sure you want to erase the board?", "WARNING",
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 funcButtonClr.setSelected(true);
-                drawBoard.repaint();
+                drawboard.repaint();
                 System.out.println("Clearing board...");
             }
         });
@@ -508,8 +510,8 @@ public class WhiteBoardGUI extends JFrame {
 		this.penStroke = stroke;
 	}
 
-	public JPanel getDrawBoard() {
-		return drawBoard;
+	public DrawBoard getDrawboard() {
+		return drawboard;
 	}
 
 	public User getUser() {

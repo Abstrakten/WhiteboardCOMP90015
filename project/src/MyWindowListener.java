@@ -10,7 +10,7 @@ import javax.swing.*;
 
 public class MyWindowListener implements WindowListener {
 
-	WhiteBoardGUI gui;
+	private WhiteBoardGUI gui;
 
 	public MyWindowListener(WhiteBoardGUI gui) {
 		this.gui = gui;
@@ -27,7 +27,7 @@ public class MyWindowListener implements WindowListener {
 				JOptionPane.YES_NO_CANCEL_OPTION);
 
 		if (i == 0) {
-			FileUtil.save(gui.getUser());
+			FileUtil.save(gui.getDrawboard().shapes);
 			if(gui.isNewSessionAvailable()) {
 				gui.setVisible(false);
 			} else {

@@ -5,15 +5,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FileUtil {
 
-    private User user;
     private static boolean saved = false;
     private static File existFile;
 
-    public static void save(User user) {
+    public static void save(List<ColoredShape> shapes) {
         if (!saved) {
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
@@ -28,7 +28,7 @@ public class FileUtil {
                     }
                     FileOutputStream fos = new FileOutputStream(file);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(user);
+                    oos.writeObject(shapes);
                     oos.close();
                     fos.close();
 
@@ -38,14 +38,13 @@ public class FileUtil {
                     JOptionPane.showMessageDialog(null, "IO Exception catch, Save fail",
                             "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
                     e.printStackTrace();
-
                 }
             }
         } else {
             try {
                 FileOutputStream fos = new FileOutputStream(existFile);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(user);
+                oos.writeObject(shapes);
                 oos.close();
                 fos.close();
             } catch (IOException e) {
@@ -56,7 +55,7 @@ public class FileUtil {
 
     }
 
-    public static void saveAs(User user, JPanel jPanel){
+    public static void saveAs(List<ColoredShape> shapes, JPanel jPanel){
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
         FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image File(*.jpg)", "jpg");
@@ -75,7 +74,7 @@ public class FileUtil {
                     }
                     fos = new FileOutputStream(file);
                     oos = new ObjectOutputStream(fos);
-                    oos.writeObject(user);
+                    oos.writeObject(shapes);
                     oos.close();
                     fos.close();
 
@@ -103,18 +102,18 @@ public class FileUtil {
         }
     }
 
-    public static User load() {
+    public static List<ColoredShape> load() {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
         chooser.setFileFilter(wbFilter);
         int option = chooser.showDialog(null, "Open");
-        User user = null;
+        List<ColoredShape> shapes = Collections.emptyList();
         if(option == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = chooser.getSelectedFile();
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                user = (User) ois.readObject();
+                shapes = (List<ColoredShape>) ois.readObject();
                 fis.close();
                 ois.close();
 
@@ -126,7 +125,7 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        return user;
+        return shapes;
     }
 
     public static File getExistFile() {
