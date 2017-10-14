@@ -1,19 +1,7 @@
-import java.awt.Shape;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * @author Xin Qi
- * @version 1.4
- */
-
-public class User implements Serializable {
+public class User {
 
 	private String ip, port, username;
-	boolean isHost;
+	private boolean isHost;
 
 	public User(String ip, String port, String username, Boolean host) {
 		this.ip = ip;
