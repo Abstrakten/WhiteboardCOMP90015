@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Created by TriXXeD on 20/09/2017.
  */
 public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runnable {
-    private static final long serialVersionUID = 1L; //what is dis
+    //private static final long serialVersionUID = 1L; //what is dis
     private ChatServerI chatServer;
     private String name = null;
     protected ChatClient(String name, ChatServerI chatServer) throws RemoteException{
