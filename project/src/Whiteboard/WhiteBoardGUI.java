@@ -351,12 +351,14 @@ public class WhiteBoardGUI extends JFrame {
         saveMenu.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		JMenuItem saveAsMenu = new JMenuItem("Export to Image");
 		JMenuItem closeMenu = new JMenuItem("Close");
+		JMenuItem quitMenu = new JMenuItem("Quit");
 		JMenuItem about = new JMenuItem("About");
 		fileMenu.add(newSession);
 		fileMenu.add(openMenu);
 		fileMenu.add(saveMenu);
 		fileMenu.add(saveAsMenu);
 		fileMenu.add(closeMenu);
+		fileMenu.add(quitMenu);
 		fileMenu.add(about);
 		JMenu editMenu = new JMenu("Edit");
 		JMenuItem undoOption = new JMenuItem("Undo");
@@ -396,6 +398,16 @@ public class WhiteBoardGUI extends JFrame {
 			} else {
 				this.setVisible(false);
 				this.dispose();
+				//code to notify other users
+			}
+		});
+
+		quitMenu.addActionListener(e -> {
+
+			if(JOptionPane.showConfirmDialog(null,"Are you sure you want to quit?","WARNING",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				this.setVisible(false);
+				this.dispose();
+				//code to update online peer list
 			}
 		});
 
@@ -448,7 +460,13 @@ public class WhiteBoardGUI extends JFrame {
             closeMenu.setEnabled(false);
             editMenu.setEnabled(false);
             editMenu.setVisible(false);
+            quitMenu.setVisible(true);
+            quitMenu.setEnabled(true);
         }
+        else{
+			quitMenu.setVisible(false);
+			quitMenu.setEnabled(false);
+		}
 		return jMenuBar;
 
 	}
