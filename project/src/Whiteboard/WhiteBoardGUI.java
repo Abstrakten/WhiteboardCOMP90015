@@ -14,16 +14,42 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.*;
+
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
 // using swing and awt extends JFrame.
 // hi Marc the method sendMessage needs you! Pull the scroll bar in the end then you can see it.
 public class WhiteBoardGUI extends JFrame {
-
+    
 	public static User user;
 	private Color penColor = Color.BLACK;
+	public static ArrayList<User> userArrayList;
 	private BasicStroke penStroke;
 	private JRadioButton colorButton = new JRadioButton();
 	private ButtonGroup funcBG, colorBG;
@@ -51,7 +77,19 @@ public class WhiteBoardGUI extends JFrame {
 		users.setModel(usersModel);
 		// user list test-->
 
-		// TODO figure out what this part does
+		User nh = new User(user.getIp(), user.getPort(), user.getUsername(), user.IsHost());
+        try {
+            this.user.chatClient.chatServer.registerUser(nh);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.user.chatClient.chatServer.broadcastUsers();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        // TODO figure out what this part does
 /*        try {
             if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
                 this.user = user;
@@ -439,6 +477,11 @@ public class WhiteBoardGUI extends JFrame {
 				this.dispose();
 				//code to notify other users
 			}
+            try {
+                this.user.chatClient.chatServer.unregisterChatClient(this.user.chatClient);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
 		});
 
 		quitMenu.addActionListener(e -> {
@@ -447,6 +490,13 @@ public class WhiteBoardGUI extends JFrame {
 				this.setVisible(false);
 				this.dispose();
 				//code to update online peer list
+			}
+
+			//This should let users leave correctly, although not sure this is the right place to put it
+			try {
+				this.user.chatClient.chatServer.unregisterChatClient(this.user.chatClient);
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
 			}
 		});
 

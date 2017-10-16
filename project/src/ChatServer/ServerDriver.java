@@ -15,6 +15,6 @@ public class ServerDriver {
     public static void setupRMI() throws IOException {
         //TODO: Check port number and look for alternate ports, port 0 (auto-find) creates error
         LocateRegistry.createRegistry(1099);
-        Naming.rebind("RMIChatServer", new Server());
+        Naming.rebind("Whiteboard", new Server());
     }
 }
