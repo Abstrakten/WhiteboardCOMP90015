@@ -3,12 +3,15 @@
  * @version 1.4
  */
 
+import ChatClient.ChatClientDriver;
+import ChatServer.ServerDriver;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.sound.sampled.Port;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import javax.swing.*;
-import javax.swing.text.FlowView;
 
 
 public class WelcomeWindow {
@@ -88,6 +91,10 @@ public class WelcomeWindow {
             } else {
                 User user = new User(ipField.getText(), portField.getText(), nameField.getText(),
                         createOrJoinBG.getSelection().getActionCommand().equals("host"));
+
+                //Setting up RMI chat client if host, joining RMI chat client if not
+                joinOrCreateRMIServer(user, ipField.getText(), portField.getText());
+
                 WhiteBoardGUI gui = new WhiteBoardGUI(user);
                 jf.dispose();
             }
@@ -96,6 +103,27 @@ public class WelcomeWindow {
 		jf.setVisible(true);
 	}
 
+    public void joinOrCreateRMIServer(User user, String ip, String port){
+        //Setting up RMI chat client if host, joining RMI chat client if not
+        if(user.IsHost() == true){
+            try {
+                ServerDriver.setupRMI();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else {
+            String[] args = new String[]{user.getUsername(), ip, port};
+            try {
+                ChatClientDriver.main(args);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            } catch (NotBoundException e1) {
+                e1.printStackTrace();
+            } catch (MalformedURLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
 	public static void main(String[] args) {
 		WelcomeWindow welcomeWindow = new WelcomeWindow();
 		welcomeWindow.createOrJoin();

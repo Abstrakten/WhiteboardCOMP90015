@@ -1,6 +1,6 @@
 package ChatClient;
 
-import ChatServer.ChatServerI;
+import ChatServer.ServerI;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -14,7 +14,9 @@ public class ChatClientDriver {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         //Default for testing
         String chatServerURL = "//localhost/RMIChatServer";
-        ChatServerI chatServer = (ChatServerI) Naming.lookup(chatServerURL);
+        ServerI chatServer = (ServerI) Naming.lookup(chatServerURL);
         new Thread(new ChatClient(args[0], chatServer)).start();
     }
+
+
 }
