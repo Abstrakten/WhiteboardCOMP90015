@@ -1,5 +1,6 @@
 package ChatClient;
 
+import ChatServer.ChatServer;
 import ChatServer.ChatServerI;
 
 import java.rmi.Remote;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runnable {
     private ChatServerI chatServer;
     private String name = null;
+
     protected ChatClient(String name, ChatServerI chatServer) throws RemoteException{
         this.name = name;
         this.chatServer = chatServer;
@@ -23,6 +25,10 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
     // Change this later to fit GUI implementation
     public void retrieveMessage(String message) throws RemoteException {
         System.out.println(message);
+    }
+
+    public void disconnect(ChatServerI chatServer) throws RemoteException {
+        chatServer.unregisterChatClient(this);
     }
 
     @Override

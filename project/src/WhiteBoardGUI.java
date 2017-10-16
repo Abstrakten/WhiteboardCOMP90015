@@ -61,7 +61,7 @@ public class WhiteBoardGUI extends JFrame {
             e.printStackTrace();
         }*/
 
-		this.setTitle("WhiteBoard" + " " + user.getUsername());
+		this.setTitle("WhiteBoard: " + user.getUsername());
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);

@@ -17,4 +17,6 @@ public class ChatClientDriver {
         ChatServerI chatServer = (ChatServerI) Naming.lookup(chatServerURL);
         new Thread(new ChatClient(args[0], chatServer)).start();
     }
+
+
 }

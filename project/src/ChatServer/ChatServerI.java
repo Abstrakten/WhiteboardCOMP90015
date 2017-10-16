@@ -1,5 +1,6 @@
 package ChatServer;
 
+import ChatClient.ChatClient;
 import ChatClient.ChatClientI;
 
 import java.rmi.Remote;
@@ -10,5 +11,6 @@ import java.rmi.RemoteException;
  */
 public interface ChatServerI extends Remote {
     void registerChatClient(ChatClientI chatClient) throws RemoteException;
+    void unregisterChatClient(ChatClientI chatClient) throws RemoteException;
     void broadcastMessage(String message) throws RemoteException;
 }
