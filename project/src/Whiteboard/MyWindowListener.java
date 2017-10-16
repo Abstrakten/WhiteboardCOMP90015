@@ -28,20 +28,10 @@ public class MyWindowListener implements WindowListener {
 
 		if (i == 0) {
 			FileUtil.save(gui.getDrawboard().shapes);
-			if(gui.isNewSessionAvailable()) {
-				gui.setVisible(false);
-			} else {
-			gui.setVisible(false);
-			gui.dispose();
-			}
+			gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else if(i == 1) {
 			// not save
-			if(gui.isNewSessionAvailable()) {
-				gui.setVisible(false);
-			} else {
-			gui.setVisible(false);
-			gui.dispose();
-			}
+			gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else {
 			// cancel
 			gui.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -51,7 +41,7 @@ public class MyWindowListener implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		System.exit(0);
+		//System.exit(0);
 
 	}
 

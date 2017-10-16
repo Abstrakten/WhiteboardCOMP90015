@@ -412,11 +412,21 @@ public class WhiteBoardGUI extends JFrame {
 		});
 
 		newSession.addActionListener(e -> {
-            //WelcomeWindow welcomeWindow= new WelcomeWindow();
-            //welcomeWindow.createOrJoin();
-            NewFileWindow newWindow = new NewFileWindow();
-            newWindow.createNew(u);
-        });
+            String newPort = JOptionPane.showInputDialog(null,"Please input the port number used to create new file", "WhiteBoard",JOptionPane.QUESTION_MESSAGE);
+            if(newPort == null||newPort.equals("")){
+            	return;
+			}
+			try {
+				int portValid = Integer.parseInt(newPort);
+				User newUser = this.getUser();
+				newUser.setPort(newPort);
+				WhiteBoardGUI newGui = new WhiteBoardGUI(newUser);
+			}
+			catch(NumberFormatException ex)  {
+				JOptionPane.showMessageDialog( null,
+						"The port number must be a number.","Oops", JOptionPane.PLAIN_MESSAGE );
+			}
+		});
 
 		saveAsMenu.addActionListener(e -> {
             FileUtil.saveAs(drawboard.shapes, getDrawboard());
