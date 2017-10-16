@@ -311,7 +311,7 @@ public class WhiteBoardGUI extends JFrame {
 		sendJB.addActionListener(e -> {
 
             // push the newest received message to chat screen.
-            screen.append(user.getUsername() + sendMessage(sendText.getText(), screen) + "\n");
+            screen.append(user.getUsername() +": "+ sendMessage(sendText.getText(), screen) + "\n");
             // reset sending text bar.
             sendText.setText("");
             // reset cursor.
@@ -338,8 +338,11 @@ public class WhiteBoardGUI extends JFrame {
 
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newSession = new JMenuItem("New File");
+        newSession.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		JMenuItem openMenu = new JMenuItem("Open");
+        openMenu.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		JMenuItem saveMenu = new JMenuItem("Save");
+        saveMenu.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		JMenuItem saveAsMenu = new JMenuItem("Export to Image");
 		JMenuItem closeMenu = new JMenuItem("Close");
 		JMenuItem about = new JMenuItem("About");

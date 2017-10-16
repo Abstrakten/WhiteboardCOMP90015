@@ -83,12 +83,15 @@ public class WelcomeWindow {
 		confirmBT.addActionListener(e -> {
 
 		    // TODO input validation on ip and port
-
-            if(nameField.getText().trim().isEmpty()) {
+            
+            if(!validate(ipField.getText().trim())){
+                JOptionPane.showMessageDialog(jf,"A valid IP address is required", "whiteBoard",JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(nameField.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(jf,
                         "A username is required", "whiteBoard",
                         JOptionPane.INFORMATION_MESSAGE);
-            } else {
+            }else {
                 User user = new User(ipField.getText(), portField.getText(), nameField.getText(),
                         createOrJoinBG.getSelection().getActionCommand().equals("host"));
 
@@ -123,6 +126,10 @@ public class WelcomeWindow {
                 e1.printStackTrace();
             }
         }
+    }
+    public static boolean validate(final String ip) {
+        String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+        return ip.matches(PATTERN);
     }
 	public static void main(String[] args) {
 		WelcomeWindow welcomeWindow = new WelcomeWindow();
