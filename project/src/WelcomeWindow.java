@@ -81,17 +81,18 @@ public class WelcomeWindow {
 		jf.add(confirmBT, BorderLayout.SOUTH);
 
 		confirmBT.addActionListener(e -> {
-
+            int flag = 0;
+            String str="";
 		    // TODO input validation on ip and port
-            
-            if(!validate(ipField.getText().trim())){
-                JOptionPane.showMessageDialog(jf,"A valid IP address is required", "whiteBoard",JOptionPane.INFORMATION_MESSAGE);
+            if(nameField.getText().trim().isEmpty()) {
+                str = "A username is required\n";
+                flag++;
             }
-            else if(nameField.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(jf,
-                        "A username is required", "whiteBoard",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }else {
+            if(!validate(ipField.getText().trim())){
+                str+="A valid IP address is required";
+                flag++;
+            }
+            if(flag == 0){
                 User user = new User(ipField.getText(), portField.getText(), nameField.getText(),
                         createOrJoinBG.getSelection().getActionCommand().equals("host"));
 
@@ -100,6 +101,9 @@ public class WelcomeWindow {
 
                 WhiteBoardGUI gui = new WhiteBoardGUI(user);
                 jf.dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(jf,str,"whiteBoard",JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
