@@ -97,7 +97,8 @@ public class WelcomeWindow {
                         createOrJoinBG.getSelection().getActionCommand().equals("host"));
 
                 //Setting up RMI chat client if host, joining RMI chat client if not
-                joinOrCreateRMIServer(user, ipField.getText(), portField.getText());
+                //TODO: RMI takes a serverURL as string not an IP - Currently defaults are taking care of it
+                joinOrCreateRMIServer(user, ipField.getText());
 
                 WhiteBoardGUI gui = new WhiteBoardGUI(user);
                 jf.dispose();
@@ -110,25 +111,32 @@ public class WelcomeWindow {
 		jf.setVisible(true);
 	}
 
-    public void joinOrCreateRMIServer(User user, String ip, String port){
+    public void joinOrCreateRMIServer(User user, String serverURL){
         //Setting up RMI chat client if host, joining RMI chat client if not
+        //Default for testing
+        serverURL = "//localhost/RMIChatServer";
+        //
         if(user.IsHost() == true){
             try {
                 ServerDriver.setupRMI();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+            joinRMIServerChat(user, serverURL);
         } else {
-            String[] args = new String[]{user.getUsername(), ip, port};
-            try {
-                ChatClientDriver.main(args);
-            } catch (RemoteException e1) {
-                e1.printStackTrace();
-            } catch (NotBoundException e1) {
-                e1.printStackTrace();
-            } catch (MalformedURLException e1) {
-                e1.printStackTrace();
-            }
+            joinRMIServerChat(user, serverURL);
+        }
+    }
+
+    public void joinRMIServerChat(User user, String serverURL){
+        try {
+            user.chatClient = ChatClientDriver.startChatClient(user.getUsername(), serverURL);
+        } catch (RemoteException e1) {
+            e1.printStackTrace();
+        } catch (NotBoundException e1) {
+            e1.printStackTrace();
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
         }
     }
     public static boolean validate(final String ip) {
