@@ -12,10 +12,20 @@ import java.rmi.RemoteException;
  */
 public class ChatClientDriver {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+        String chatServerURL;
+        if(args.length >= 2) {chatServerURL = args[1]; }
         //Default for testing
-        String chatServerURL = "//localhost/RMIChatServer";
-        ServerI chatServer = (ServerI) Naming.lookup(chatServerURL);
-        new Thread(new ChatClient(args[0], chatServer)).start();
+        chatServerURL = "//localhost/RMIChatServer";
+        //ServerI chatServer = (ServerI) Naming.lookup(chatServerURL);
+        ChatClient chatClient = startChatClient(args[0], chatServerURL);
+        //new Thread(chatClient).start();
+    }
+
+    public static ChatClient startChatClient(String name, String serverURL) throws RemoteException, MalformedURLException, NotBoundException {
+        ServerI chatServer = (ServerI) Naming.lookup(serverURL);
+        ChatClient chatClient = new ChatClient(name, chatServer);
+        new Thread(chatClient).start();
+        return chatClient;
     }
 
 

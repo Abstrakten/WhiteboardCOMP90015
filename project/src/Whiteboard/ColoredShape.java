@@ -1,3 +1,5 @@
+package Whiteboard;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;

@@ -1,4 +1,4 @@
-/**
+package Whiteboard; /**
 * @author NNavnita
 * @version 1.4
 */

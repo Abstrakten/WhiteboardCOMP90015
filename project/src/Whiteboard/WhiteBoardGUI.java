@@ -1,9 +1,12 @@
+package Whiteboard;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.rmi.RemoteException;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -310,8 +313,11 @@ public class WhiteBoardGUI extends JFrame {
 		sendJB.setActionCommand("Send");
 		sendJB.addActionListener(e -> {
 
-            // push the newest received message to chat screen.
-            screen.append(user.getUsername() +": "+ sendMessage(sendText.getText(), screen) + "\n");
+
+            // push the newest received message to chat screen. -- no, your pushing the message you just send to the screen
+            //screen.append(user.getUsername() + ": " + sendText.getText() + "\n");
+            sendMessage(sendText.getText(), this.user, screen);
+
             // reset sending text bar.
             sendText.setText("");
             // reset cursor.
@@ -464,9 +470,15 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-	public String sendMessage(String text, JTextArea screen
-	// , String ip, String port, String username, String State//
-	) {
+    public static void appendMsg(String msg, JTextArea textArea){
+	    textArea.append(msg);
+    }
+	public void sendMessage(String msg, User user, JTextArea textArea) {
+	    try {
+            user.chatClient.chatServer.broadcastMessage(user.getUsername() + " : " + msg  + "\n", textArea);
+        } catch (RemoteException e) { e.printStackTrace(); }
+        textArea.append(user.chatClient.lastMsgReceived);
+
 
 		// the method is called at 213 at this class (sendJB's actionPerformend method).
 
@@ -476,7 +488,6 @@ public class WhiteBoardGUI extends JFrame {
 		// information from other source.
 		// the display format in parentheses below can changed as you wish.
 		// screen.append(sourceUsername + "[" + sourceState + "]: " + sourceSay+ "\n");
-		return text;
 
 	}
 

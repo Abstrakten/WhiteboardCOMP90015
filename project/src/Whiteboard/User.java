@@ -1,7 +1,12 @@
+package Whiteboard;
+
+import ChatClient.ChatClient;
+
 public class User {
 
 	private String ip, port, username;
 	private boolean isHost;
+    public ChatClient chatClient;
 
 	public User(String ip, String port, String username, Boolean host) {
 		this.ip = ip;
