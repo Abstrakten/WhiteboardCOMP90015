@@ -434,6 +434,15 @@ public class WhiteBoardGUI extends JFrame {
             }
         });
 
+        if(!this.user.IsHost()){
+            newSession.setEnabled(false);
+            openMenu.setEnabled(false);
+            saveMenu.setEnabled(false);
+            saveAsMenu.setEnabled(false);
+            closeMenu.setEnabled(false);
+            editMenu.setEnabled(false);
+            editMenu.setVisible(false);
+        }
 		return jMenuBar;
 
 	}
