@@ -1,5 +1,8 @@
 package ChatClient;
 
+import Whiteboard.User;
+import Whiteboard.WhiteBoardGUI;
+
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,6 +28,8 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
         //TODO: not allowed to append text in textArea for some reason, or at least it does not happen
         //Workaround for default  package
         lastMsgReceived = message;
+        WhiteBoardGUI.appendMsg(message, textArea);
+        textArea.append(message);
         System.out.println(message);
     }
 

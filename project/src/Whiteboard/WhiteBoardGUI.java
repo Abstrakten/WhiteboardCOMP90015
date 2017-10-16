@@ -1,4 +1,4 @@
-import ChatClient.ChatClient;
+package Whiteboard;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -470,7 +470,9 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-
+    public static void appendMsg(String msg, JTextArea textArea){
+	    textArea.append(msg);
+    }
 	public void sendMessage(String msg, User user, JTextArea textArea) {
 	    try {
             user.chatClient.chatServer.broadcastMessage(user.getUsername() + " : " + msg  + "\n", textArea);

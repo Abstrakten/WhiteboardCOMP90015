@@ -1,3 +1,5 @@
+package Whiteboard;
+
 import ChatClient.ChatClient;
 
 public class User {

@@ -1,4 +1,4 @@
-
+package Whiteboard;
 /**
  * @author Xin Qi
  * @version 1.4

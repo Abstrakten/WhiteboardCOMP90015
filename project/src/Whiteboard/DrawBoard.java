@@ -1,4 +1,4 @@
-
+package Whiteboard;
 /**
  * @author Xin Qi
  * @version 1.4
@@ -21,7 +21,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import javax.swing.ButtonGroup;
