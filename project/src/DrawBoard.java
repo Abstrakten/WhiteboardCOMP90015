@@ -321,6 +321,14 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
             shapes.add(((Stack<ColoredShape>) redoShapes).pop());
         }
     }
+    public void Erase() {
+        if(!shapes.isEmpty()){
+            shapes.clear();
+        }
+        if(!redoShapes.isEmpty()){
+            redoShapes.clear();
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) { }

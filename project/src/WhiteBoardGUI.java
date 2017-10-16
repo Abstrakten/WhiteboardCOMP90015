@@ -41,7 +41,6 @@ public class WhiteBoardGUI extends JFrame {
 	private DrawBoard drawboard;
 	private static JTabbedPane tab;
 	private boolean newSessionAvailable = false;
-	public JRadioButton funcButtonClr, funcButtonUndo, funcButtonRedo;
 
 	// frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
@@ -94,7 +93,7 @@ public class WhiteBoardGUI extends JFrame {
         JPanel colorAndFunc = colorAndFunc();
         JPanel chatWindow = chatWindow();
         JPanel colorAndStroke = colorAndStroke();
-        JMenuBar jMenuBar = menuBar();
+        JMenuBar jMenuBar = menuBar(user);
 
         drawboard = new DrawBoard(funcBG, colorBG, this);
 
@@ -233,15 +232,6 @@ public class WhiteBoardGUI extends JFrame {
 		funcButton1.setActionCommand("Free draw");
 		funcBG.add(funcButton1);
 		functionP.add(funcButton1);
-		funcButtonClr = new JRadioButton("");
-		funcButtonClr.setActionCommand("Clear");
-		funcBG.add(funcButtonClr);
-		funcButtonUndo = new JRadioButton("");
-		funcButtonUndo.setActionCommand("Undo");
-		funcBG.add(funcButtonUndo);
-		funcButtonRedo = new JRadioButton("");
-		funcButtonRedo.setActionCommand("Redo");
-		funcBG.add(funcButtonRedo);
 
 		// defining 15 colors in a color list.
 		Color colors[] = { new Color(0, 30, 40), new Color(98, 14, 13), new Color(123, 14, 3), new Color(50, 60, 100),
@@ -344,7 +334,7 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-	private JMenuBar menuBar() {
+	private JMenuBar menuBar(User u) {
 
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newSession = new JMenuItem("New File");
@@ -401,8 +391,10 @@ public class WhiteBoardGUI extends JFrame {
 		});
 
 		newSession.addActionListener(e -> {
-            WelcomeWindow welcomeWindow = new WelcomeWindow();
-            welcomeWindow.createOrJoin();
+            //WelcomeWindow welcomeWindow= new WelcomeWindow();
+            //welcomeWindow.createOrJoin();
+            NewFileWindow newWindow = new NewFileWindow();
+            newWindow.createNew(u);
         });
 
 		saveAsMenu.addActionListener(e -> {
@@ -418,7 +410,6 @@ public class WhiteBoardGUI extends JFrame {
 
 		undoOption.addActionListener(e -> {
 		    // TODO not sure if we want undo/redo to de-select a figure
-            funcButtonUndo.setSelected(true);
             drawboard.Undo();
             drawboard.repaint();
             System.out.println("Undo...");
@@ -426,7 +417,6 @@ public class WhiteBoardGUI extends JFrame {
 
 		redoOption.addActionListener(e -> {
             // TODO not sure if we want undo/redo to de-select a figure
-            funcButtonRedo.setSelected(true);
             drawboard.Redo();
             drawboard.repaint();
             System.out.println("Redo...");
@@ -435,7 +425,7 @@ public class WhiteBoardGUI extends JFrame {
 		clrOption.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(null, "Are you sure you want to erase the board?", "WARNING",
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                funcButtonClr.setSelected(true);
+                drawboard.Erase();
                 drawboard.repaint();
                 System.out.println("Clearing board...");
             }
