@@ -1,5 +1,7 @@
 package Whiteboard;
 
+import ChatClient.ChatClient;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -39,6 +41,8 @@ public class WhiteBoardGUI extends JFrame {
 	private BasicStroke penStroke;
 	private JRadioButton colorButton = new JRadioButton();
 	private ButtonGroup funcBG, colorBG;
+	public JPanel chatWindow;
+	public static JTextArea screen;
 	public JLabel xJLabel = new JLabel("0");
 	public JLabel yJLabel = new JLabel("0");
 	private DrawBoard drawboard;
@@ -94,7 +98,7 @@ public class WhiteBoardGUI extends JFrame {
         tab = new JTabbedPane();
 
         JPanel colorAndFunc = colorAndFunc();
-        JPanel chatWindow = chatWindow();
+        chatWindow = chatWindow();
         JPanel colorAndStroke = colorAndStroke();
         JMenuBar jMenuBar = menuBar(user);
 
@@ -297,11 +301,12 @@ public class WhiteBoardGUI extends JFrame {
 		// ----> JPanel onlineUsers = new JPanel(new BorderLayout());
 
 		// define text area and a label on screen.
-		JTextArea screen = new JTextArea();
+		screen = new JTextArea();
 		JLabel screenLabel = new JLabel("Chat History", JLabel.CENTER);
 
 		// define and set a new scroll container to contain the text screen panel.
 		JScrollPane js = new JScrollPane(screen);
+		js.setViewportView(screen);
 		screen.setEditable(false);
 		screen.setLineWrap(true);
 		// js.setPreferredSize(new Dimension(330, 70));
@@ -314,7 +319,7 @@ public class WhiteBoardGUI extends JFrame {
 		sendJB.addActionListener(e -> {
 
 
-            // push the newest received message to chat screen. -- no, your pushing the message you just send to the screen
+            // push the newest received message to chat screen. -- no, you're appending the message you just send to the screen
             //screen.append(user.getUsername() + ": " + sendText.getText() + "\n");
             sendMessage(sendText.getText(), this.user, screen);
 
@@ -498,14 +503,16 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-    public static void appendMsg(String msg, JTextArea textArea){
-	    textArea.append(msg);
+    public static void appendMsg(String msg){
+	    //textArea.append(msg);
+	    screen.append(msg);
+	    //textArea.append(chatClient.lastMsgReceived);
+	    //System.out.println(chatClient.lastMsgReceived);
     }
 	public void sendMessage(String msg, User user, JTextArea textArea) {
 	    try {
-            user.chatClient.chatServer.broadcastMessage(user.getUsername() + " : " + msg  + "\n", textArea);
+            user.chatClient.chatServer.broadcastMessage(user.getUsername() + " : " + msg  + "\n");
         } catch (RemoteException e) { e.printStackTrace(); }
-        textArea.append(user.chatClient.lastMsgReceived);
 
 
 		// the method is called at 213 at this class (sendJB's actionPerformend method).
