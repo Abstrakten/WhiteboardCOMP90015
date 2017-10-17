@@ -1,12 +1,11 @@
 package ChatClient;
 
-import Whiteboard.User;
-import Whiteboard.WelcomeWindow;
-import Whiteboard.WhiteBoardGUI;
+import Whiteboard.*;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -34,6 +33,11 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
 
     }
 
+    @Override
+    public void updateUserDrawboard(List<ColoredShape> shapes) throws RemoteException {
+        WhiteBoardGUI.updateDrawboard(shapes);
+    }
+
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {
         chatServer.unregisterChatClient(this);
     }
@@ -51,4 +55,6 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
             } catch (RemoteException e) { e.printStackTrace(); }
         }*/
     }
+
+
 }

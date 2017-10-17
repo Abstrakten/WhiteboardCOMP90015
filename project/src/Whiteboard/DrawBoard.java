@@ -21,6 +21,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import javax.swing.ButtonGroup;
@@ -40,11 +42,13 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 	public List<ColoredShape> shapes;
 	private ColoredShape TempColoredShape;
 	private List<ColoredShape> redoShapes;
+	private List<ColoredShape> sendShapesList;
 
     public DrawBoard(ButtonGroup funcBG, ButtonGroup colorBG, WhiteBoardGUI whiteBoardGUI) {
 
 	    shapes = new Stack<>();
 	    redoShapes = new Stack<>();
+	    sendShapesList = new ArrayList<>();
 		this.TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
 		this.colorBG = colorBG;
 		this.funcBG = funcBG;
@@ -55,18 +59,6 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		this.setBackground(Color.WHITE);
 		this.setPreferredSize(new Dimension(700, 620));
 
-		// TODO Not sure what we are doing here, but it does not seem like a thing that should be in drawboard
-/*		this.users = users;
-		for (User user : this.users) {
-			try {
-				if (user.getIp().equals(InetAddress.getLocalHost().getHostAddress())) {
-					this.user = user;
-					System.out.println(this.user.toString());
-				}
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-		}*/
 		repaint();
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -84,7 +76,6 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
             shapes.clear();
         }
 
-        // TODO perhaps no need to redraw the entire canvas?
 		for (ColoredShape cs : this.shapes) {
 		    if(cs.IsText()){
 		        // TODO fix and add custom fonts
@@ -177,9 +168,10 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
                 text.setRequestFocusEnabled(true);
                 confirm.addActionListener(e1 -> {
                     if (text.getText().trim().isEmpty()) {
+                        // TODO if text is empty, maybe just consider it a cancel? or ignore?
                         JOptionPane.showMessageDialog(stringInput,
-                                "Text can not be null, if you want to cancel " + "\nthis operation, please click cancel.",
-                                "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
+                                "Text can not be null",
+                                "whiteboard", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         shapes.add(new ColoredShape(text.getText(), gui.getPenColor(), x1, y1));
                         stringInput.dispose();
@@ -231,6 +223,12 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
         
 		TempColoredShape = new ColoredShape(new Line2D.Float(), Color.white, new BasicStroke(2));
 		repaint();
+
+		if(!(command.equals("Free draw") || command.equals("Erase"))) {
+		    sendShapesList.add(shapes.get(shapes.size()-1));
+        }
+		WhiteBoardGUI.drawOnServer(sendShapesList);
+		sendShapesList.clear();
 	}
 
 	@Override
@@ -246,6 +244,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
             case "Free draw":
                 Line2D freeDrawLine = new Line2D.Float(x1, y1, x, y);
                 shapes.add(new ColoredShape(freeDrawLine, gui.getPenColor(), gui.getPenStroke()));
+                sendShapesList.add(new ColoredShape(freeDrawLine, gui.getPenColor(), gui.getPenStroke()));
                 x1 = x;
                 y1 = y;
                 System.out.println("Free drawing...");
@@ -254,6 +253,7 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
             case "Erase":
                 Line2D erase = new Line2D.Float(x1, y1, x, y);
                 shapes.add(new ColoredShape(erase, Color.WHITE, gui.getPenStroke()));
+                sendShapesList.add(new ColoredShape(erase, Color.WHITE, gui.getPenStroke()));
                 x1 = x;
                 y1 = y;
                 System.out.println("Erase using...");

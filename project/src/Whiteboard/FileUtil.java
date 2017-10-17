@@ -13,13 +13,14 @@ public class FileUtil {
 
     private static boolean saved = false;
     private static File existFile;
+    public static int option;
 
     public static void save(List<ColoredShape> shapes) {
         if (!saved) {
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter wbFilter = new FileNameExtensionFilter("WhiteBoard File(*.wb)", "wb");
             chooser.setFileFilter(wbFilter);
-            int option = chooser.showDialog(null, "Save");
+            option = chooser.showDialog(null, "Save");
             if(option == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 String name = chooser.getName(file);
@@ -96,9 +97,8 @@ public class FileUtil {
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "IO Exception catch, Save fail",
-                        "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
+                        "whiteboard", JOptionPane.INFORMATION_MESSAGE);
                 e.printStackTrace();
-
             }
         }
     }
@@ -122,7 +122,7 @@ public class FileUtil {
                 existFile = file;
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(null, "Load fail",
-                        "whiteBoard", JOptionPane.INFORMATION_MESSAGE);
+                        "whiteboard", JOptionPane.INFORMATION_MESSAGE);
                 e.printStackTrace();
             }
         }
@@ -131,8 +131,5 @@ public class FileUtil {
 
     public static File getExistFile() {
         return existFile;
-    }
-
-    public static void main(String[] args) {
     }
 }

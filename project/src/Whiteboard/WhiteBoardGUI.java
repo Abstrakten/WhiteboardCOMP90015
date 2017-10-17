@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.rmi.RemoteException;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -36,7 +37,7 @@ import javax.swing.KeyStroke;
 // hi Marc the method sendMessage needs you! Pull the scroll bar in the end then you can see it.
 public class WhiteBoardGUI extends JFrame {
 
-	private User user;
+	public static User user;
 	private Color penColor;
 	private BasicStroke penStroke;
 	private JRadioButton colorButton = new JRadioButton();
@@ -45,7 +46,7 @@ public class WhiteBoardGUI extends JFrame {
 	public static JTextArea screen;
 	public JLabel xJLabel = new JLabel("0");
 	public JLabel yJLabel = new JLabel("0");
-	private DrawBoard drawboard;
+	private static DrawBoard drawboard;
 	private static JTabbedPane tab;
 	private boolean newSessionAvailable = false;
 
@@ -526,21 +527,20 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
-	// testing method, the main method of GUI is in WelcomeWindow class.
-	// public static void main(String[] args) {
-	// List<User> users1 = new ArrayList<>();
-	// User xin;
-	// try {
-	// xin = new User(InetAddress.getLocalHost().getHostAddress(), "Port", "Xin",
-	// true);
-	// users1.add(xin);
-	// WhiteBoardGUI test = new WhiteBoardGUI(users1);
-	// test.initOperationInterface();
-	// } catch (UnknownHostException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
+	public static void updateDrawboard(List<ColoredShape> shapes) {
+        drawboard.shapes = shapes;
+        drawboard.repaint();
+    }
+
+    public static void drawOnServer(List<ColoredShape> shapes) {
+        try {
+            user.chatClient.chatServer.draw(shapes);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 	public Color getPenColor() {
 		return penColor;
