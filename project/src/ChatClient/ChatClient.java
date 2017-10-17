@@ -1,6 +1,7 @@
 package ChatClient;
 
 import Whiteboard.User;
+import Whiteboard.WelcomeWindow;
 import Whiteboard.WhiteBoardGUI;
 
 import javax.swing.*;
@@ -24,13 +25,13 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
 
     @Override
     // Change this later to fit GUI implementation
-    public void retrieveMessage(String message, JTextArea textArea) throws RemoteException {
+    public void retrieveMessage(String message) throws RemoteException {
         //TODO: not allowed to append text in textArea for some reason, or at least it does not happen
-        //Workaround for default  package
         lastMsgReceived = message;
-        WhiteBoardGUI.appendMsg(message, textArea);
-        textArea.append(message);
+        WhiteBoardGUI.appendMsg(message);
+        //textArea.append(message);
         System.out.println(message);
+
     }
 
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {
