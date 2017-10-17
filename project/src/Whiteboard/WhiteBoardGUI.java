@@ -45,7 +45,10 @@ public class WhiteBoardGUI extends JFrame {
 		super();
 		this.user = user;
 		users = new JList<>();
-
+		User userTest = new User("123","123","123",false);
+		DefaultListModel<User> usersModel = new DefaultListModel<>();
+		usersModel.addElement(userTest);
+		users.setModel(usersModel);
 		// user list test-->
 
 		// TODO figure out what this part does
@@ -278,6 +281,7 @@ public class WhiteBoardGUI extends JFrame {
 
 	// this method return the chatWindow Panel, the right white one.
 	private JPanel chatWindow() {
+
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout( new BorderLayout());
 		JPanel listPanel = new JPanel();
@@ -290,7 +294,15 @@ public class WhiteBoardGUI extends JFrame {
 		listPanel.add(jListScroll,BorderLayout.CENTER);
 		listPanel.add(kickOut,BorderLayout.SOUTH);
 		listPanel.add(userNum,BorderLayout.NORTH);
-		jListScroll.add(users);
+		jListScroll.setViewportView(users);
+		users.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(users.getSelectedValue()!=null){
+					kickOut.setEnabled(true);
+				}
+			}
+		});
 		if(users.getSelectedValue()==null){
 			kickOut.setEnabled(false);
 		}
@@ -568,7 +580,9 @@ public class WhiteBoardGUI extends JFrame {
     	DefaultListModel<User> usersModel = new DefaultListModel<>();
     	for(int i = 0; i < urs.size();i++){
     		usersModel.addElement(urs.get(i));
+    		System.out.println("");
 		}
+
 		users.setModel(usersModel);
 	}
 
