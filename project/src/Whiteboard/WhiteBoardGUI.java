@@ -626,8 +626,10 @@ public class WhiteBoardGUI extends JFrame {
 	}
 
 	public static void displaySessionClosed(String s) {
-        JOptionPane.showMessageDialog(null,s);
-        System.exit(0);
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(null, s);
+            System.exit(0);
+        });
     }
 
     public static boolean newUserPrompt(User u) {
