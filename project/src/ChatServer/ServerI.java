@@ -36,4 +36,6 @@ public interface ServerI extends Remote {
     void unregisterUser(User user) throws RemoteException;
     void broadcastUsers() throws RemoteException;
 
+    void broadcastClose() throws RemoteException;
+
 }

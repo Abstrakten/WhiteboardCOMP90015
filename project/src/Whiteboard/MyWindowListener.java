@@ -5,6 +5,7 @@ package Whiteboard; /**
  
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.rmi.RemoteException;
 
 import javax.swing.*;
 
@@ -30,7 +31,12 @@ public class MyWindowListener implements WindowListener {
 			if (i == 0) {
 				FileUtil.save(gui.getDrawboard().shapes);
 				gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			} else if (i == 1) {
+                try {
+                    gui.getUser().chatClient.chatServer.broadcastClose();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
+            } else if (i == 1) {
 				// not save
 				gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			} else {

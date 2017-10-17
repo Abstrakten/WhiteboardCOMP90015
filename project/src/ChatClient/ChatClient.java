@@ -48,6 +48,11 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
         WhiteBoardGUI.updateUserList(users);
     }
 
+    @Override
+    public void sessionClosed() throws RemoteException {
+        WhiteBoardGUI.displaySessionClosed();
+    }
+
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {
         chatServer.unregisterChatClient(this);
     }

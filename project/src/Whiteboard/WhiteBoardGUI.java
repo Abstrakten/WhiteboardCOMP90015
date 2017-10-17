@@ -63,8 +63,9 @@ public class WhiteBoardGUI extends JFrame {
 	private boolean newSessionAvailable = false;
 	private static JList<User> users;
     private static DefaultListModel<User> usersModel;
+    private static JLabel userNum;
 
-	// frame class constructor.
+    // frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
 	// the arguments are from InputAddrWindow class, called in the method connectBT
 	// actionPerformed.
@@ -329,7 +330,7 @@ public class WhiteBoardGUI extends JFrame {
 		JPanel listPanel = new JPanel();
 		listPanel.setLayout(new BorderLayout());
 		JButton kickOut = new JButton("Kick Out");
-		JLabel userNum = new JLabel();
+		userNum = new JLabel();
 		userNum.setText(users.getModel().getSize()+" Users Online");
 		JScrollPane jListScroll = new JScrollPane();
 		jListScroll.setPreferredSize(new Dimension(210,210));
@@ -643,9 +644,14 @@ public class WhiteBoardGUI extends JFrame {
     	for(int i = 0; i < urs.size();i++){
     		usersModel.addElement(urs.get(i));
 		}
+        userNum.setText(users.getModel().getSize()+" Users Online");
         System.out.println(users.getModel().getSize());
         System.out.println(userArrayList.size());
 	}
+
+	public static void displaySessionClosed() {
+        
+    }
 
 
 

@@ -12,6 +12,7 @@ public class User implements Serializable{
 	private String ip, port, username;
 	private boolean isHost;
     public ChatClient chatClient;
+    public int id;
 
 	public User(String ip, String port, String username, Boolean host) {
 		this.ip = ip;
@@ -27,9 +28,7 @@ public class User implements Serializable{
     }
 
 	public String toString() {
-		return ("UserName: " + username + "\n" + "Is host: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
-				+ port + "\n");
-
+		return (username + " ID: " + id);
 	}
 
 	public String getIp() {

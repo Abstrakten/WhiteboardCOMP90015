@@ -24,6 +24,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
     private List<ColoredShape> shapes;
     public ArrayList<User> users;
     private List<ColoredShape> redoShapes;
+    private int idCounter = 1;
 
     protected Server() throws RemoteException {
         chatClients = new ArrayList<ChatClientI>();
@@ -36,7 +37,9 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients.add(chatClient);
     }
     public synchronized void registerUser(User user) throws RemoteException {
+        user.id = idCounter++;
         users.add(user);
+
         for (ChatClientI cc : chatClients) {
             cc.updateUserDrawboard(this.shapes);
         }
@@ -96,6 +99,13 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         while (i < chatClients.size()) {
             chatClients.get(i++).retrieveUsers(users);
 
+        }
+    }
+
+    @Override
+    public synchronized void broadcastClose() throws RemoteException {
+        for (ChatClientI cc: chatClients) {
+            cc.sessionClosed();
         }
     }
 }
