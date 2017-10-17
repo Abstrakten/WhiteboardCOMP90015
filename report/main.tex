@@ -4,7 +4,9 @@
 % Licensed under MIT License
 %
 % Page creation engine
-\documentclass[11pt,a4paper,article,oneside]{memoir}
+\documentclass[10pt,a4paper,article,oneside]{memoir}
+\usepackage{graphicx}
+\graphicspath{{images/}}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
@@ -12,13 +14,12 @@
 \usepackage{mathtools}
 \usepackage{titling}
 \usepackage[backend=biber]{biblatex}
-\addbibresource{bibtex/mybib.bib}
+%\addbibresource{bibtex/mybib.bib}
 \usepackage[pagestyles]{titlesec}
 \titleformat{\chapter}[hang]{\huge\bfseries}{}{0pt}{}[
     \vspace{-0.5ex}%
     \rule{\textwidth}{0.5pt}%
-    \vspace{-1.5cm}
-]
+    \vspace{-1.5cm}]
 \renewcommand{\thechapter}{\Roman{chapter}}
 \renewcommand{\thesection}{\thechapter.\Roman{section}} 
 \renewcommand{\thesubsection}{\thechapter.\thesection.\Roman{subsection}}
@@ -40,10 +41,10 @@
 
 %Meta Data
 \title{COMP90015: Collaborative Whiteboard}
-\author{Kasper Terndrup, SID 918581, kterndrup@student.unimelb.edu.au;
-	Marc Tom Thorgersen, SID 906200, mthorgersen@student.unimelb.edu.au;
-        Navnita Nandakumar, SID 921834, nnandakumar@student.unimelb.edu.au;
-        Xin Qi, SID 856094, xingq3@student.unimelb.edu.au}
+\author{Kasper Terndrup, 918581, kterndrup@student.unimelb.edu.au;
+Marc Tom Thorgersen, 906200, mthorgersen@student.unimelb.edu.au;
+Navnita Nandakumar, 921834, nnandakumar@student.unimelb.edu.au;
+Xin Qi, 856094, xingq3@student.unimelb.edu.au}
 \date{October 17th 2017}
 %
 
@@ -77,17 +78,24 @@
 %%% CHAPTERS & INPUT %%%
 \input{intro}
 \input{sysarch}
+\includegraphics{sysarch}
 \input{commp}
+\includegraphics{commp}
 \input{msgf}
 \input{diags}
+\input{imple}
 \input{contr}
 % Chapter files listing
 
 \newpage
 
 % End of chapter files listing
-
+\begin{thebibliography}{99}
+\bibitem{c1} Chris K. Caldwell (2017). Divides. Retrieved from \url{http://primes.utm.edu/glossary/xpage/divides.html}
+\bibitem{c2} Stallings, William (2016). Cryptography and Network Security Principles and Practice 6th Edition, Pearson. ISBN: 0133354695.
+\end{thebibliography}
 % Bibliography
-\part{bibliography}
-\printbibliography
+%\part{bibliography}
+%\printbibliography
+
 \end{document}

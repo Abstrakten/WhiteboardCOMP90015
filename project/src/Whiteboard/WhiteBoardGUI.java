@@ -10,27 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.rmi.RemoteException;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
 // using swing and awt extends JFrame.
@@ -49,6 +29,7 @@ public class WhiteBoardGUI extends JFrame {
 	private static DrawBoard drawboard;
 	private static JTabbedPane tab;
 	private boolean newSessionAvailable = false;
+	private List<String> users;
 
 	// frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
@@ -57,6 +38,10 @@ public class WhiteBoardGUI extends JFrame {
 	public WhiteBoardGUI(User user) {
 		super();
 		this.user = user;
+		users.add("user1");
+		users.add("user2");
+
+		// user list test-->
 
 		// TODO figure out what this part does
 /*        try {
@@ -289,7 +274,28 @@ public class WhiteBoardGUI extends JFrame {
 
 	// this method return the chatWindow Panel, the right white one.
 	private JPanel chatWindow() {
+		JPanel mainPanel = new JPanel();
+		JPanel listPanel = new JPanel();
+		JButton kickOut = new JButton();
+		JList users = new JList();
+		JLabel userNum = new JLabel();
+		JScrollPane jListScroll = new JScrollPane();
+		jListScroll.add(users);
+		for(String u:this.users){
 
+		}
+		users.setModel(new AbstractListModel() {
+			@Override
+
+			public int getSize() {
+				return 0;
+			}
+
+			@Override
+			public Object getElementAt(int index) {
+				return null;
+			}
+		});
 		// define properties of chat window panel.
 		JPanel chatP = new JPanel();
 		chatP.setLayout(new BorderLayout());
