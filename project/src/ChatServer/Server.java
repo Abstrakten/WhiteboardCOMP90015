@@ -1,9 +1,11 @@
 package ChatServer;
 
+import ChatClient.ChatClient;
 import ChatClient.ChatClientI;
 
 import Whiteboard.ColoredShape;
 import Whiteboard.DrawBoard;
+import Whiteboard.WhiteBoardGUI;
 import com.sun.org.apache.regexp.internal.RE;
 
 import Whiteboard.User;
@@ -45,7 +47,12 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         }
     }
     public synchronized void unregisterUser(User user) throws RemoteException {
-        users.remove(user);
+        users.remove(user.id-1);
+        ChatClientI mychat = chatClients.get(user.id-1);
+        chatClients.remove(user.id-1);
+        mychat.beenKicked();
+
+        broadcastUsers();
     }
     public synchronized void unregisterChatClient(ChatClientI chatClient) throws RemoteException{
         chatClients.remove(chatClient);
@@ -54,6 +61,8 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
     // error is RemoteException in server thread, caused by ConnectExecption: connection refused to host, connection refused: connect
     public synchronized void broadcastMessage(String message) throws RemoteException {
         int i = 0;
+
+
         while (i < chatClients.size()) {
             chatClients.get(i++).retrieveMessage(message);
         }

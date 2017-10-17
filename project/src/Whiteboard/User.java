@@ -21,12 +21,6 @@ public class User implements Serializable{
 		this.isHost = host;
 	}
 
-	public void kickUser(User user) throws RemoteException {
-	    if(this.isHost != true) { return; }
-	    this.chatClient.chatServer.unregisterChatClient(user.chatClient);
-	    this.chatClient.chatServer.unregisterUser(user);
-    }
-
 	public String toString() {
 		return (username + " ID: " + id);
 	}
