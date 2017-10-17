@@ -1,0 +1,8 @@
+\section{RMI}
+The RMI components are split into two packages, one for server and one for client.
+Each package contains two classes, a driver and a base class, and a interface.
+The driver classes are solely responsible for establishing connections.
+In the case of the server this means creating the registry, and in the case of the client connecting to said registry.
+
+The methods contained in the interface and the base class, which implements the interface, are used to pass information through the server to all clients.
+This includes the chat messages and the drawboard, as well as management functionality such as kicking a client from the whiteboard collaboration.

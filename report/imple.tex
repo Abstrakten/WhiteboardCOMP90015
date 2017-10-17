@@ -5,6 +5,7 @@ The GUI (Graphic User Interface) was implemented using AWT and Swing components.
 \noindent AWT (Abstract Window Toolkit) is a set of APIs (Application Program Interfaces) that provides a GUI for a Java program. The drawback is that it is platform-dependent.
 
 \noindent Swing is a GUI widget toolkit for Java and part of the JFC (Java Foundation Classes) API for providing a GUI for a Java program. It provides a more sophisticated set of GUI components than AWT and a native look and feel that emulates the look and feel of several platforms. It also supports a pluggable look and feel that allows applications to have a look and feel unrelated to the underlying platform. Swing components are therefore "lightweight" and more powerful and flexible than AWT equivalents.
+
 \section{Classes}
 The main Whiteboard contains 8 classes, introduced below by the order of their appearance:
 \subsection{WelcomeWindow}
@@ -40,3 +41,6 @@ This class defines several file-related methods such as Save, Open and Export to
 
 \subsection{MyWindowListener}
 This class is used to define the window actions. For example, when the Manager tries to close the window, a dialog box appears asking whether he/she would like to save the file first.
+
+\input{cha/chat.tex}
+\input{cha/rmi.tex}
