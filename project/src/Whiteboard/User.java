@@ -1,11 +1,8 @@
 package Whiteboard;
 
 import ChatClient.ChatClient;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 public class User implements Serializable{
 

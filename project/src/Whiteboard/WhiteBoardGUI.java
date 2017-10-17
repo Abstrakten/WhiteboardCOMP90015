@@ -1,45 +1,14 @@
 package Whiteboard;
 
-import ChatClient.ChatClient;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
-
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.util.List;
-import javax.swing.*;
-
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import java.util.List;
 
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
@@ -662,8 +631,11 @@ public class WhiteBoardGUI extends JFrame {
     }
 
     public void kickUser(User usr) throws RemoteException {
-        if(usr.IsHost()) { return; }
+        if (usr.IsHost()) {
+            return;
+        }
         user.chatClient.chatServer.unregisterUser(usr);
+        user.chatClient.chatServer.broadcastUsers();
     }
 
 
@@ -699,5 +671,4 @@ public class WhiteBoardGUI extends JFrame {
 	public void setNewSessionAvailable(boolean newSessionAvailable) {
 		this.newSessionAvailable = newSessionAvailable;
 	}
-
 }

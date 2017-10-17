@@ -19,11 +19,22 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
     public ChatServer.ServerI chatServer;
     public String name = null;
     public String lastMsgReceived;
+    public int id;
 
     protected ChatClient(String name, ChatServer.ServerI chatServer) throws RemoteException{
         this.name = name;
         this.chatServer = chatServer;
         chatServer.registerChatClient(this);
+    }
+
+    @Override
+    public void setId(int i) throws RemoteException {
+        id = i;
+    }
+
+    @Override
+    public int getId() throws RemoteException {
+        return id;
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 /**
  * Created by TriXXeD on 20/09/2017.
@@ -32,24 +33,27 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients = new ArrayList<ChatClientI>();
         shapes = new Stack<>();
         redoShapes = new Stack<>();
-        users = new ArrayList<User>();
+        users = new ArrayList<>();
     }
 
     public synchronized void registerChatClient(ChatClientI chatClient) throws RemoteException{
+        chatClient.setId(idCounter);
         chatClients.add(chatClient);
     }
     public synchronized void registerUser(User user) throws RemoteException {
         user.id = idCounter++;
         users.add(user);
-
-        for (ChatClientI cc : chatClients) {
-            cc.updateUserDrawboard(this.shapes);
-        }
+        updateClients();
     }
     public synchronized void unregisterUser(User user) throws RemoteException {
-        users.remove(user.id-1);
-        ChatClientI mychat = chatClients.get(user.id-1);
-        chatClients.remove(user.id-1);
+        users.removeIf(u -> u.id == user.id);
+        ChatClientI mychat = null;
+        for (ChatClientI c : chatClients) {
+            if (c.getId() == user.id) {
+                mychat = c;
+            }
+        }
+        chatClients.remove(mychat);
         mychat.beenKicked();
     }
     public synchronized void unregisterChatClient(ChatClientI chatClient) throws RemoteException{
@@ -59,7 +63,6 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
     // error is RemoteException in server thread, caused by ConnectExecption: connection refused to host, connection refused: connect
     public synchronized void broadcastMessage(String message) throws RemoteException {
         int i = 0;
-
 
         while (i < chatClients.size()) {
             chatClients.get(i++).retrieveMessage(message);

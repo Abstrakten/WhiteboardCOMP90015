@@ -14,6 +14,10 @@ import java.util.List;
  * Created by TriXXeD on 20/09/2017.
  */
 public interface ChatClientI extends Remote {
+
+    void setId(int i) throws RemoteException;
+    int getId() throws RemoteException;
+
     void retrieveMessage(String message) throws RemoteException;
 
 
@@ -22,6 +26,6 @@ public interface ChatClientI extends Remote {
     void retrieveUsers(ArrayList<User> list) throws RemoteException;
 
     void sessionClosed()throws RemoteException;
-    void beenKicked() throws  RemoteException;
+    void beenKicked() throws RemoteException;
 
 }
