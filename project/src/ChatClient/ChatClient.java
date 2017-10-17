@@ -45,6 +45,7 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
 
     public void retrieveUsers(ArrayList<User> users) throws RemoteException{
         WhiteBoardGUI.userArrayList = users;
+        WhiteBoardGUI.updateUserList(users);
     }
 
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {

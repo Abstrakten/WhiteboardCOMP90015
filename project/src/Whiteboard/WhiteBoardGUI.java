@@ -62,6 +62,7 @@ public class WhiteBoardGUI extends JFrame {
 	private static JList userJlist;
 	private boolean newSessionAvailable = false;
 	private static JList<User> users;
+    private static DefaultListModel<User> usersModel;
 
 	// frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
@@ -72,7 +73,7 @@ public class WhiteBoardGUI extends JFrame {
 		this.user = user;
 		users = new JList<>();
 		User userTest = new User("123","123","123",false);
-		DefaultListModel<User> usersModel = new DefaultListModel<>();
+		usersModel = new DefaultListModel<>();
 		usersModel.addElement(userTest);
 		users.setModel(usersModel);
 		// user list test-->
@@ -137,6 +138,7 @@ public class WhiteBoardGUI extends JFrame {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        updateUserList(userArrayList);
 
         rightMainPanel.add(chatWindow, BorderLayout.WEST);
         southPanel.add(colorAndFunc, BorderLayout.CENTER);
@@ -636,15 +638,13 @@ public class WhiteBoardGUI extends JFrame {
 
     public static void updateUserList(List<User> urs) {
     	// remove all elements from the JList.
-    	users.removeAll();
+        usersModel.removeAllElements();
     	// add new user from the input list into JList.
-    	DefaultListModel<User> usersModel = new DefaultListModel<>();
     	for(int i = 0; i < urs.size();i++){
     		usersModel.addElement(urs.get(i));
-    		System.out.println("");
 		}
-
-		users.setModel(usersModel);
+        System.out.println(users.getModel().getSize());
+        System.out.println(userArrayList.size());
 	}
 
 
