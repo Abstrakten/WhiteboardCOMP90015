@@ -4,7 +4,7 @@ import ChatClient.ChatClient;
 
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class User implements Serializable {
 
 	private String ip, port, username;
 	private boolean isHost;
