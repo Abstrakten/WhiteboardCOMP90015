@@ -1,0 +1,9 @@
+\chapter{System Architecture}
+Our system includes a client/server architectural model that allows the clients and server to be hosted on different systems in the network.
+\section{Server}
+The server is responsible for managing the clients currently connected to it and for the distribution of the whiteboard drawing and chat messages. The server also listens for new incoming connections.
+\subsection{Manager}
+In our implementation, the first user to create the whiteboard (and therefore its Manager) acts as the Host for the application. The manager may create a New whiteboard file, Save (and Save As) and Close the existing file or Open a previously created file. The manager also has the privilege to kick out another user and edit the whiteboard (Undo,Redo and Erase Board operations). The Manager approves/rejects requests by other users to join the whiteboard.
+\section{Client}
+The other users that request to join the whiteboard are the clients. They must place a request to the Manager to join the whiteboard. Clients may Quit or Join the whiteboard at any time and use all whiteboard features. However, they cannot use the File and Edit options.
+

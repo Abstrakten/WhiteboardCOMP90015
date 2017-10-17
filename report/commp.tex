@@ -1,0 +1,12 @@
+\chapter{Communication Protocol}
+\section{RMI}
+We used the Java RMI (Remote Invocation Method) as the communication protocol in our project since it supports the direct transfer of serialized Java classes and distributed garbage-collection (using DGC).
+\subsection{Server}
+The Server class listens to the RMI requests and implements the interface where the methods are declared.
+\subsection{ServerI}
+The ServerI interface defines the interface implemented by the Server and contains the declarations of the methods to Register/Unregister the Client and Broadcast the message and Update the canvas.
+\subsection{Client}
+The Client class gets the reference to the remote object residing on the server and invokes its broadcast and update methods.
+\subsection{ClientI}
+The ClientI interface defines the interface implemented by the Client and contains the declaration of the method to Retrieve the message and Update the canvas.
+

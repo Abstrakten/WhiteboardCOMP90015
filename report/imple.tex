@@ -1,0 +1,45 @@
+\chapter{Implementation}
+\section{GUI}
+The GUI (Graphic User Interface) was implemented using AWT and Swing components.
+
+\noindent AWT (Abstract Window Toolkit) is a set of APIs (Application Program Interfaces) that provides a GUI for a Java program. The drawback is that it is platform-dependent.
+
+\noindent Swing is a GUI widget toolkit for Java and part of the JFC (Java Foundation Classes) API for providing a GUI for a Java program. It provides a more sophisticated set of GUI components than AWT and a native look and feel that emulates the look and feel of several platforms. It also supports a pluggable look and feel that allows applications to have a look and feel unrelated to the underlying platform. Swing components are therefore "lightweight" and more powerful and flexible than AWT equivalents.
+\section{Classes}
+The main Whiteboard contains 8 classes, introduced below by the order of their appearance:
+\subsection{WelcomeWindow}
+A welcome dialog is presented using the InputAddrWindow class, which requires the user to choose whether he/she wishes to "Join an existing whiteboard" (act as a client) or "Create a new whiteboard" (act as the host).
+
+\noindent If the user chooses to be a client, then he/she must input the IP address and Port number the Manager used to create the whiteboard. If the Manager approves the user's request to join, he/she is enlisted as a peer.
+
+\noindent If the user chooses to be a host , then his/her IP address and specified Port number becomes the server address other peers need to input when requesting a connection. 
+\subsection{WhiteBoardGUI}
+This class is used for presenting the main GUI of the whiteboard. It contains three main panels, namely, Chat History, Drawing Board and Function panel.
+
+\noindent The Chat History panel is used to present the chat history and display the list of online users. The manager will also have options like "Kick out User" in this panel (that other users will not).
+
+\noindent The Drawing Board is the panel where the actual whiteboard functionality takes place. Users can draw, erase and type and move text within this panel. This panel invokes the DrawBoard class (detailed later).
+
+\noindent The Function panel presents the colour choices and drawing options. It has 16 default colours, but the user may choose other colours by clicking the "More Colors" button. The drawing options include shapes like Line, Circle, Rectangle and Oval, as well as Text, Choose (to move the Text) and Erase functions. The "Choose Stroke" button can be used to set the size of the stroke.
+
+\noindent The main window also includes two menus- File and Edit. However, options like New File, Open, Save, Save As and Close from the File menu, and the entire Edit menu (with options like Undo, Redo and Erase Board) are only visible to the Manager. Other users can only choose to "Quit" the whiteboard from the File menu.
+
+\noindent \textit{Note:} It might be helpful to note the distinction between the Erase Board and Close/New File functions. Erase Board option allows the Manager to erase all diagrams from the canvas of the existing whiteboard. The New File function allows the Manager to create a new whiteboard with a different Port number (but same IP address), while the Close function allows the Manager to close/exit the existing whiteboard.
+\subsection{DrawBoard}
+This class is mainly responsible for performing the drawing actions. The shapes are made using the Java2D shapes method and each shape is a separate object with properties like X- and Y- co-ordinates, Height and Width. A ColoredShape class (detailed later). is used to store these properties.
+
+\noindent We implement the MouseListener to acquire the shape's properties.
+\subsection{ColoredShape}
+Each shape is a separate instance of this class.
+
+\subsection{InputStrings}
+Similar to Shapes, the Text drawn by the user is also a separate object i.e. an instance of this class.
+
+\subsection{User}
+This class is used to store user properties like IP address, Port number, Username and Status (Host/Client).
+
+\subsection{FileUtil}
+This class defines several file-related methods such as Save, Open and Export to Image.
+
+\subsection{MyWindowListener}
+This class is used to define the window actions. For example, when the Manager tries to close the window, a dialog box appears asking whether he/she would like to save the file first.

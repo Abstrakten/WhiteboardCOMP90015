@@ -1,0 +1,14 @@
+\chapter{Introduction}
+A shared whiteboard allows multiple users to draw simultaneously on a canvas. With the inclusion of a simple chat window that allows all the current users of the system to broadcast messages to each other, it makes for a convenient tool to aid in collaborative discussions. In this project, we are tasked with the job of creating a collaborative whiteboard that can be shared between clients. 
+\section{Requirements}
+\subsection{GUI}
+The whiteboard needs to support the usage of Shapes (line, circle, rectangle and oval), Free draw, Text and Erase in a minimum of 16 colours. A text-based Chat Window should also be implemented, as well as a File menu with options for the Manager to Create a new file, Save (and Save As) and Close the existing file, and Open a previously created file.
+
+
+\noindent \textit{Extensions:} Our version supports the movement of text, additional colours and stroke sizes. We also included an Edit menu with options for the Manager to Undo, Redo and Erase the board.
+\subsection{Clients}
+The users are required to provide a username when joining a whiteboard. The interface must show the usernames of all other clients currently editing the whiteboard; this online peer list must be maintained. Clients may connect/disconnect at any time.
+
+\noindent The user who creates the whiteboard becomes its Manager. Other users may request to join the whiteboard by providing the Manager's IP address and Port number as inputs, which must be approved by the Manager. The Manager may also kick someone out, at which point the user in question must be notified.
+
+\noindent When the Manager quits, the application will be terminated and all other peers will be notified.
