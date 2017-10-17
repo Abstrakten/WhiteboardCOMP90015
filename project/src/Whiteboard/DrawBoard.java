@@ -1,12 +1,4 @@
 package Whiteboard;
-/**
- * @author Xin Qi
- * @version 1.4
- * 
- * @comment this class accept a user list from gui class, and will add the shapes and strings to
- * 					this user on this.userlist, so if any other method need the list, just use getUsers and setUsers.
- * 					the users are identified by ip address. 
- */
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
