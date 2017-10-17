@@ -30,10 +30,7 @@ This class is mainly responsible for performing the drawing actions. The shapes 
 
 \noindent We implement the MouseListener to acquire the shape's properties.
 \subsection{ColoredShape}
-Each shape is a separate instance of this class.
-
-\subsection{InputStrings}
-Similar to Shapes, the Text drawn by the user is also a separate object i.e. an instance of this class.
+This class represents an abstraction over any change that a user can make to the whiteboard. This means that the class holds any figure, text, or erase-action that a user can make. This allowed us to simplify the process of updating the DrawBoards across mulitple clients, such that only one type needed to be drawn.
 
 \subsection{User}
 This class is used to store user properties like IP address, Port number, Username and Status (Host/Client).
