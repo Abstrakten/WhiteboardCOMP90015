@@ -45,7 +45,8 @@ public class MyWindowListener implements WindowListener {
 			}
 		} else {
 			gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		}
+			gui.disconnect();
+        }
 
 	}
 

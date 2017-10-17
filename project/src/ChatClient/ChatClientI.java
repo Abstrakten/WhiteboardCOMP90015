@@ -20,11 +20,9 @@ public interface ChatClientI extends Remote {
 
     void retrieveMessage(String message) throws RemoteException;
 
-
     void updateUserDrawboard(List<ColoredShape> shapes) throws RemoteException;
 
     void retrieveUsers(ArrayList<User> list) throws RemoteException;
 
     void sessionClosed(String s)throws RemoteException;
-
 }

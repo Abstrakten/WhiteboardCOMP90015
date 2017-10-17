@@ -67,6 +67,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients.remove(mychat);
         mychat.sessionClosed("Host has kicked you. Shutting down");
     }
+
     public synchronized void unregisterChatClient(ChatClientI chatClient) throws RemoteException{
         chatClients.remove(chatClient);
     }
@@ -128,5 +129,20 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         for (ChatClientI cc: chatClients) {
             cc.sessionClosed("Host has closed the session. Shutting down");
         }
+    }
+
+    @Override
+    public void disconnect1(int id) throws RemoteException {
+        users.removeIf(u -> u.id == id);
+    }
+
+    public void disconnect2(int id) throws RemoteException {
+        ChatClientI mychat = null;
+        for (ChatClientI c : chatClients) {
+            if (c.getId() == id) {
+                mychat = c;
+            }
+        }
+        chatClients.remove(mychat);
     }
 }

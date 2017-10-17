@@ -166,6 +166,10 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
                                 "whiteboard", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         shapes.add(new ColoredShape(text.getText(), gui.getPenColor(), x1, y1));
+                        sendShapesList.add(shapes.get(shapes.size()-1));
+                        WhiteBoardGUI.drawOnServer(sendShapesList);
+                        sendShapesList.clear();
+
                         stringInput.dispose();
                         repaint();
                     }

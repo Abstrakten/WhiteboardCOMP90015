@@ -38,4 +38,6 @@ public interface ServerI extends Remote {
 
     void broadcastClose() throws RemoteException;
 
+    void disconnect1(int id) throws RemoteException;
+    void disconnect2(int id) throws RemoteException;
 }

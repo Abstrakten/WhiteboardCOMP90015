@@ -41,6 +41,7 @@ public class WhiteBoardGUI extends JFrame {
 	public WhiteBoardGUI(User user) {
 		super();
 		this.user = user;
+		this.user.id = user.chatClient.id;
 		users = new JList<>();
 		User userTest = new User("123","123","123",false);
 		usersModel = new DefaultListModel<>();
@@ -224,9 +225,9 @@ public class WhiteBoardGUI extends JFrame {
 
 		// define each functional button as a JRadioButton, which means in the same
 		// group, only one button could be selected.
-        String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text", "Choose" };
+        String funcBT[] = { "Line", "Circle", "Rectangle", "Oval", "Erase", "Text" };
 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 6; i++) {
 			ImageIcon img = new ImageIcon(this.getClass().getResource(funcBT[i] + ".png"));
 			JRadioButton funcButton = new JRadioButton(img);
 			ImageIcon img2 = new ImageIcon(this.getClass().getResource(funcBT[i] + "2.png"));
@@ -458,16 +459,14 @@ public class WhiteBoardGUI extends JFrame {
 				this.dispose();
 				//code to notify other users
 			}
-            try {
-                this.user.chatClient.chatServer.unregisterChatClient(this.user.chatClient);
-            } catch (RemoteException e1) {
-                e1.printStackTrace();
-            }
-		});
+        });
 
 		quitMenu.addActionListener(e -> {
 
 			if(JOptionPane.showConfirmDialog(null,"Are you sure you want to quit?","WARNING",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+			    if (!user.IsHost()) {
+                    disconnect();
+                }
 				this.setVisible(false);
 				this.dispose();
 				//code to update online peer list
@@ -482,20 +481,15 @@ public class WhiteBoardGUI extends JFrame {
 		});
 
 		newSession.addActionListener(e -> {
-            String newPort = JOptionPane.showInputDialog(null,"Please input the port number used to create new file", "WhiteBoard",JOptionPane.QUESTION_MESSAGE);
-            if(newPort == null||newPort.equals("")){
-            	return;
-			}
-			try {
-				int portValid = Integer.parseInt(newPort);
-				User newUser = this.getUser();
-				newUser.setPort(newPort);
-				WhiteBoardGUI newGui = new WhiteBoardGUI(newUser);
-			}
-			catch(NumberFormatException ex)  {
-				JOptionPane.showMessageDialog( null,
-						"The port number must be a number.","Oops", JOptionPane.PLAIN_MESSAGE );
-			}
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to create a new file?\n All unsaved work will be lost", "WARNING",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                try {
+                    user.chatClient.chatServer.eraseboard();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
+                System.out.println("Clearing board..");
+            }
 		});
 
 		saveAsMenu.addActionListener(e -> {
@@ -600,6 +594,16 @@ public class WhiteBoardGUI extends JFrame {
 
 	}
 
+	public void disconnect() {
+        try {
+            user.chatClient.chatServer.disconnect1(user.id);
+            user.chatClient.chatServer.broadcastUsers();
+            user.chatClient.chatServer.disconnect2(user.id);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 	public static void updateDrawboard(List<ColoredShape> shapes) {
         drawboard.shapes = shapes;
         drawboard.repaint();
@@ -626,10 +630,12 @@ public class WhiteBoardGUI extends JFrame {
 	}
 
 	public static void displaySessionClosed(String s) {
-        SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(null, s);
-            System.exit(0);
-        });
+        if(!user.IsHost()) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, s);
+                System.exit(0);
+            });
+        }
     }
 
     public static boolean newUserPrompt(User u) {
@@ -646,8 +652,6 @@ public class WhiteBoardGUI extends JFrame {
         user.chatClient.chatServer.unregisterUser(usr);
         user.chatClient.chatServer.broadcastUsers();
     }
-
-
 
 	public Color getPenColor() {
 		return penColor;
