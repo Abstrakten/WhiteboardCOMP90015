@@ -357,10 +357,12 @@ public class WhiteBoardGUI extends JFrame {
 		kickOut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String selectedUser = (String)users.getSelectedValue().getUsername();
-
-				//user.chatClient.chatServer.kickuser(selectedUser);
-			}
+                try {
+                    kickUser(users.getSelectedValue());
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
+            }
 		});
 
 
@@ -649,8 +651,14 @@ public class WhiteBoardGUI extends JFrame {
         System.out.println(userArrayList.size());
 	}
 
-	public static void displaySessionClosed() {
-        
+	public static void displaySessionClosed(String s) {
+        JOptionPane.showMessageDialog(null,s);
+        System.exit(0);
+    }
+
+    public void kickUser(User usr) throws RemoteException {
+        if(usr.IsHost()) { return; }
+        user.chatClient.chatServer.unregisterUser(usr);
     }
 
 

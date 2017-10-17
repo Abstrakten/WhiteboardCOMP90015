@@ -50,7 +50,11 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
 
     @Override
     public void sessionClosed() throws RemoteException {
-        WhiteBoardGUI.displaySessionClosed();
+        WhiteBoardGUI.displaySessionClosed("Host has closed the session. Shutting down");
+    }
+
+    public void beenKicked() throws RemoteException {
+        WhiteBoardGUI.displaySessionClosed("Host has kicked you. Shutting down");
     }
 
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {
