@@ -44,7 +44,7 @@ public class WhiteBoardGUI extends JFrame {
 	public WhiteBoardGUI(User user) {
 		super();
 		this.user = user;
-
+		users = new JList<>();
 
 		// user list test-->
 
@@ -278,14 +278,22 @@ public class WhiteBoardGUI extends JFrame {
 
 	// this method return the chatWindow Panel, the right white one.
 	private JPanel chatWindow() {
-		String u;
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout( new BorderLayout());
 		JPanel listPanel = new JPanel();
-		JButton kickOut = new JButton();
+		listPanel.setLayout(new BorderLayout());
+		JButton kickOut = new JButton("Kick Out");
 		JLabel userNum = new JLabel();
+		userNum.setText(users.getModel().getSize()+" Users Online");
 		JScrollPane jListScroll = new JScrollPane();
+		jListScroll.setPreferredSize(new Dimension(210,210));
+		listPanel.add(jListScroll,BorderLayout.CENTER);
+		listPanel.add(kickOut,BorderLayout.SOUTH);
+		listPanel.add(userNum,BorderLayout.NORTH);
 		jListScroll.add(users);
+		if(users.getSelectedValue()==null){
+			kickOut.setEnabled(false);
+		}
 		if(user.IsHost()){
 			kickOut.setVisible(true);
 		} else {
@@ -310,7 +318,6 @@ public class WhiteBoardGUI extends JFrame {
 		// define send bar, text screen and online user panel.
 		JPanel sendingWindow = new JPanel(new FlowLayout());
 		JPanel chatScreen = new JPanel(new BorderLayout());
-		// ----> JPanel onlineUsers = new JPanel(new BorderLayout());
 
 		// define text area and a label on screen.
 		screen = new JTextArea();
@@ -354,7 +361,7 @@ public class WhiteBoardGUI extends JFrame {
 		chatP.add(sendingWindow, BorderLayout.SOUTH);
 		chatP.add(chatScreen, BorderLayout.CENTER);
 		mainPanel.add(chatP,BorderLayout.CENTER);
-		mainPanel.add(jListScroll,BorderLayout.NORTH);
+		mainPanel.add(listPanel,BorderLayout.NORTH);
 
 		return mainPanel;
 
