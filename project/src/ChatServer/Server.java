@@ -36,8 +36,10 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients.add(chatClient);
     }
     public synchronized void registerUser(User user) throws RemoteException {
-        System.out.println("this");
         users.add(user);
+        for (ChatClientI cc : chatClients) {
+            cc.updateUserDrawboard(this.shapes);
+        }
     }
     public synchronized void unregisterUser(User user) throws RemoteException {
         users.remove(user);

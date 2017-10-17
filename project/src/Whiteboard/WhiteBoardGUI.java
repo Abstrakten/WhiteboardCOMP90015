@@ -77,17 +77,7 @@ public class WhiteBoardGUI extends JFrame {
 		users.setModel(usersModel);
 		// user list test-->
 
-		User nh = new User(user.getIp(), user.getPort(), user.getUsername(), user.IsHost());
-        try {
-            this.user.chatClient.chatServer.registerUser(nh);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        try {
-            this.user.chatClient.chatServer.broadcastUsers();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+
 
         // TODO figure out what this part does
 /*        try {
@@ -135,6 +125,18 @@ public class WhiteBoardGUI extends JFrame {
         JMenuBar jMenuBar = menuBar(user);
 
         drawboard = new DrawBoard(funcBG, colorBG, this);
+
+        User nh = new User(user.getIp(), user.getPort(), user.getUsername(), user.IsHost());
+        try {
+            this.user.chatClient.chatServer.registerUser(nh);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.user.chatClient.chatServer.broadcastUsers();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
         rightMainPanel.add(chatWindow, BorderLayout.WEST);
         southPanel.add(colorAndFunc, BorderLayout.CENTER);
