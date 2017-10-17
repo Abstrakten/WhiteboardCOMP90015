@@ -632,7 +632,7 @@ public class WhiteBoardGUI extends JFrame {
 
     public static boolean newUserPrompt(User u) {
         int i = JOptionPane.showConfirmDialog(null,
-                "User "+u.getUsername()+"Whats to join.\n Will you allow it?", "New User",
+                u.getUsername()+" wants to join.\n Will you allow it?", "New User",
                 JOptionPane.YES_NO_OPTION);
         return (i == JOptionPane.YES_OPTION);
     }
