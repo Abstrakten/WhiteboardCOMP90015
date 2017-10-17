@@ -1,0 +1,3 @@
+\section{Chat Functionality}
+The chat functionality in the system works exclusively through the RMI implementation. By utilising the RMI registry method \texttt{broadcastMessage}, a client asks the server to broadcast a given message to everyone, including the client itself.
+The \texttt{broadcastMessage} method calls the \texttt{retrieveMessage} method on each client, a function which retrieves the message the server was asked to broadcast.
