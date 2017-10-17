@@ -630,6 +630,13 @@ public class WhiteBoardGUI extends JFrame {
         System.exit(0);
     }
 
+    public static boolean newUserPrompt() {
+        int i = JOptionPane.showConfirmDialog(null,
+                "Allow new user to join?", "New User",
+                JOptionPane.YES_NO_OPTION);
+        return (i == JOptionPane.YES_OPTION);
+    }
+
     public void kickUser(User usr) throws RemoteException {
         if (usr.IsHost()) {
             return;

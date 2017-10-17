@@ -41,9 +41,20 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients.add(chatClient);
     }
     public synchronized void registerUser(User user) throws RemoteException {
-        user.id = idCounter++;
-        users.add(user);
-        updateClients();
+        if(user.IsHost() || WhiteBoardGUI.newUserPrompt()) {
+            user.id = idCounter++;
+            users.add(user);
+            updateClients();
+        } else {
+            ChatClientI mychat = null;
+            for (ChatClientI c : chatClients) {
+                if (c.getId() == idCounter) {
+                    mychat = c;
+                }
+            }
+            chatClients.remove(mychat);
+            mychat.sessionClosed("Host has not allowed you to join. Shutting down");
+        }
     }
     public synchronized void unregisterUser(User user) throws RemoteException {
         users.removeIf(u -> u.id == user.id);
@@ -54,7 +65,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
             }
         }
         chatClients.remove(mychat);
-        mychat.beenKicked();
+        mychat.sessionClosed("Host has kicked you. Shutting down");
     }
     public synchronized void unregisterChatClient(ChatClientI chatClient) throws RemoteException{
         chatClients.remove(chatClient);
@@ -115,7 +126,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
     @Override
     public synchronized void broadcastClose() throws RemoteException {
         for (ChatClientI cc: chatClients) {
-            cc.sessionClosed();
+            cc.sessionClosed("Host has closed the session. Shutting down");
         }
     }
 }

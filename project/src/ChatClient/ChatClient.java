@@ -40,10 +40,8 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
     @Override
     // Change this later to fit GUI implementation
     public void retrieveMessage(String message) throws RemoteException {
-        //TODO: not allowed to append text in textArea for some reason, or at least it does not happen
         lastMsgReceived = message;
         WhiteBoardGUI.appendMsg(message);
-        //textArea.append(message);
     }
 
     @Override
@@ -58,31 +56,13 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
     }
 
     @Override
-    public void sessionClosed() throws RemoteException {
-        WhiteBoardGUI.displaySessionClosed("Host has closed the session. Shutting down");
-    }
-
-    public void beenKicked() throws RemoteException {
-        WhiteBoardGUI.displaySessionClosed("Host has kicked you. Shutting down");
+    public void sessionClosed(String s) throws RemoteException {
+        WhiteBoardGUI.displaySessionClosed(s);
     }
 
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {
         chatServer.unregisterChatClient(this);
     }
 
-    @Override
-    public void run() {
-        /*
-        //Scanner or BufferedReader?
-        Scanner scanner = new Scanner(System.in);
-        String message;
-        while(true){
-            message = scanner.nextLine();
-            try {
-                chatServer.broadcastMessage(name + " : " + message, textArea);
-            } catch (RemoteException e) { e.printStackTrace(); }
-        }*/
-    }
-
-
+    public void run() { }
 }

@@ -25,7 +25,6 @@ public interface ChatClientI extends Remote {
 
     void retrieveUsers(ArrayList<User> list) throws RemoteException;
 
-    void sessionClosed()throws RemoteException;
-    void beenKicked() throws RemoteException;
+    void sessionClosed(String s)throws RemoteException;
 
 }
