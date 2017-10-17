@@ -362,7 +362,12 @@ public class WhiteBoardGUI extends JFrame {
                 } catch (RemoteException e1) {
                     e1.printStackTrace();
                 }
-            }
+				try {
+					user.chatClient.chatServer.broadcastUsers();
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+			}
 		});
 
 

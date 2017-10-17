@@ -35,8 +35,6 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
         //textArea.append(message);
     }
 
-
-
     @Override
     public void updateUserDrawboard(List<ColoredShape> shapes) throws RemoteException {
         WhiteBoardGUI.updateDrawboard(shapes);
