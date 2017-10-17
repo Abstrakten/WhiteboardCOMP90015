@@ -38,7 +38,7 @@ import javax.swing.KeyStroke;
 public class WhiteBoardGUI extends JFrame {
 
 	public static User user;
-	private Color penColor;
+	private Color penColor = Color.BLACK;
 	private BasicStroke penStroke;
 	private JRadioButton colorButton = new JRadioButton();
 	private ButtonGroup funcBG, colorBG;
@@ -68,7 +68,7 @@ public class WhiteBoardGUI extends JFrame {
             e.printStackTrace();
         }*/
 
-		this.setTitle("WhiteBoard: " + user.getUsername());
+		this.setTitle("Whiteboard: " + user.getUsername());
 		this.setSize(new Dimension(1100, 700));
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -143,7 +143,6 @@ public class WhiteBoardGUI extends JFrame {
             jf.setLocationRelativeTo(null);
             JPanel size = new JPanel();
             size.setLayout(new FlowLayout());
-            // size.setBackground(Color.GRAY);
             jf.add(size, BorderLayout.CENTER);
 
             int i = 0;
