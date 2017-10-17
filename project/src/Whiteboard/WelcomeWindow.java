@@ -7,17 +7,21 @@ import ChatClient.ChatClientDriver;
 import ChatServer.ServerDriver;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.*;
-
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class WelcomeWindow {
 
 	public void createOrJoin() {
-
+        try{
+        InetAddress ip = InetAddress.getLocalHost();
 		JFrame jf = new JFrame();
 		jf.setTitle("WhiteBoard");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,9 +64,28 @@ public class WelcomeWindow {
         createBT.setActionCommand("host");
         joinBT.setActionCommand("client");
         createBT.setSelected(true);
+        //initially ipField is disabled
+            ipField.setEnabled(false);
+            ipField.setText(ip.getHostAddress());
         ButtonGroup createOrJoinBG = new ButtonGroup();
         createOrJoinBG.add(joinBT);
         createOrJoinBG.add(createBT);
+        joinBT.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ipField.setEnabled(true);
+                ipField.setText(null);
+
+            }
+        });
+        createBT.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ipField.setEnabled(false);
+                    ipField.setText(ip.getHostAddress());
+
+                }
+        });
 
         // Join or create button panel
 		JPanel buttonPanel = new JPanel();
@@ -109,6 +132,8 @@ public class WelcomeWindow {
         });
 
 		jf.setVisible(true);
+        }catch(UnknownHostException ex) {
+        }
 	}
 
     public void joinOrCreateRMIServer(User user, String serverURL){
