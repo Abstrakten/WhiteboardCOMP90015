@@ -41,7 +41,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
         chatClients.add(chatClient);
     }
     public synchronized void registerUser(User user) throws RemoteException {
-        if(user.IsHost() || WhiteBoardGUI.newUserPrompt()) {
+        if(user.IsHost() || WhiteBoardGUI.newUserPrompt(user)) {
             user.id = idCounter++;
             users.add(user);
             updateClients();
