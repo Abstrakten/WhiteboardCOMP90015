@@ -5,7 +5,11 @@ import Whiteboard.*;
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
 import java.util.List;
+
+import java.util.ArrayList;
+
 import java.util.Scanner;
 
 /**
@@ -29,13 +33,19 @@ public class ChatClient extends UnicastRemoteObject implements ChatClientI, Runn
         lastMsgReceived = message;
         WhiteBoardGUI.appendMsg(message);
         //textArea.append(message);
-        System.out.println(message);
-
     }
+
+
 
     @Override
     public void updateUserDrawboard(List<ColoredShape> shapes) throws RemoteException {
         WhiteBoardGUI.updateDrawboard(shapes);
+    }
+
+
+    public void retrieveUsers(ArrayList<User> users) throws RemoteException{
+        WhiteBoardGUI.userArrayList = users;
+        WhiteBoardGUI.updateUserList(users);
     }
 
     public void disconnect(ChatServer.ServerI chatServer) throws RemoteException {

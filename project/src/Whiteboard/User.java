@@ -1,8 +1,13 @@
 package Whiteboard;
 
 import ChatClient.ChatClient;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
-public class User {
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+
+public class User implements Serializable{
 
 	private String ip, port, username;
 	private boolean isHost;
@@ -14,6 +19,12 @@ public class User {
 		this.username = username;
 		this.isHost = host;
 	}
+
+	public void kickUser(User user) throws RemoteException {
+	    if(this.isHost != true) { return; }
+	    this.chatClient.chatServer.unregisterChatClient(user.chatClient);
+	    this.chatClient.chatServer.unregisterUser(user);
+    }
 
 	public String toString() {
 		return ("UserName: " + username + "\n" + "Is host: " + isHost + "\n" + "UserIP: " + ip + "\n" + "User's Port: "
@@ -52,5 +63,6 @@ public class User {
 	public void IsHost(Boolean state) {
 		this.isHost = state;
 	}
+
 
 }

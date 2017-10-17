@@ -121,7 +121,11 @@ public class WelcomeWindow {
 
                 //Setting up RMI chat client if host, joining RMI chat client if not
                 //TODO: RMI takes a serverURL as string not an IP - Currently defaults are taking care of it
-                joinOrCreateRMIServer(user, ipField.getText());
+                try {
+                    joinOrCreateRMIServer(user, ipField.getText(), Integer.parseInt(portField.getText()));
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
 
                 WhiteBoardGUI gui = new WhiteBoardGUI(user);
                 jf.dispose();
@@ -136,20 +140,23 @@ public class WelcomeWindow {
         }
 	}
 
-    public void joinOrCreateRMIServer(User user, String serverURL){
+    public void joinOrCreateRMIServer(User user, String serverURL, int port) throws RemoteException {
         //Setting up RMI chat client if host, joining RMI chat client if not
         //Default for testing
-        serverURL = "//localhost/RMIChatServer";
+        //serverURL = "//127.0.0.1/Whiteboard";
+        serverURL = "//" + serverURL + "/Whiteboard";
         //
         if(user.IsHost() == true){
             try {
-                ServerDriver.setupRMI();
+                ServerDriver.setupRMI(port);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
             joinRMIServerChat(user, serverURL);
+            //user.chatClient.chatServer.registerUser(user);
         } else {
             joinRMIServerChat(user, serverURL);
+            //user.chatClient.chatServer.registerUser(user);
         }
     }
 

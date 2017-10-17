@@ -1,9 +1,13 @@
 package ChatServer;
 
 import ChatClient.ChatClientI;
+
 import Whiteboard.ColoredShape;
 import Whiteboard.DrawBoard;
 import com.sun.org.apache.regexp.internal.RE;
+
+import Whiteboard.User;
+
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,19 +20,32 @@ import java.util.Stack;
  */
 public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
     private ArrayList<ChatClientI> chatClients;
+
     private List<ColoredShape> shapes;
+    public ArrayList<User> users;
     private List<ColoredShape> redoShapes;
 
     protected Server() throws RemoteException {
-        chatClients = new ArrayList<>();
+        chatClients = new ArrayList<ChatClientI>();
         shapes = new Stack<>();
         redoShapes = new Stack<>();
+        users = new ArrayList<User>();
     }
+
     public synchronized void registerChatClient(ChatClientI chatClient) throws RemoteException{
-        this.chatClients.add(chatClient);
+        chatClients.add(chatClient);
+    }
+    public synchronized void registerUser(User user) throws RemoteException {
+        users.add(user);
+        for (ChatClientI cc : chatClients) {
+            cc.updateUserDrawboard(this.shapes);
+        }
+    }
+    public synchronized void unregisterUser(User user) throws RemoteException {
+        users.remove(user);
     }
     public synchronized void unregisterChatClient(ChatClientI chatClient) throws RemoteException{
-        this.chatClients.remove(chatClient);
+        chatClients.remove(chatClient);
     }
     //TODO: This method breaks once a client leaves the network, the server will attempt to send a message to the client who left, causing any user who sends a message to get an exception
     // error is RemoteException in server thread, caused by ConnectExecption: connection refused to host, connection refused: connect
@@ -38,6 +55,7 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
             chatClients.get(i++).retrieveMessage(message);
         }
     }
+
 
     public synchronized void draw(List<ColoredShape> shapes) throws RemoteException {
         redoShapes.clear();
@@ -72,5 +90,12 @@ public class Server extends UnicastRemoteObject implements ChatServer.ServerI {
             updateClients();
         }
     }
+    
+    public synchronized void broadcastUsers() throws RemoteException{
+        int i = 0;
+        while (i < chatClients.size()) {
+            chatClients.get(i++).retrieveUsers(users);
 
+        }
+    }
 }

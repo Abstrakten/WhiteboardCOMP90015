@@ -9,12 +9,12 @@ import java.rmi.registry.LocateRegistry;
  */
 public class ServerDriver {
     public static void main(String[] args) throws IOException {
-        setupRMI();
+        //setupRMI();
     }
 
-    public static void setupRMI() throws IOException {
+    public static void setupRMI(int port) throws IOException {
         //TODO: Check port number and look for alternate ports, port 0 (auto-find) creates error
-        LocateRegistry.createRegistry(1099);
-        Naming.rebind("RMIChatServer", new Server());
+        LocateRegistry.createRegistry(port);
+        Naming.rebind("Whiteboard", new Server());
     }
 }
