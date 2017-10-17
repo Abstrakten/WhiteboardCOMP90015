@@ -1,6 +1,7 @@
 package Whiteboard;
 
 import ChatClient.ChatClient;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -8,9 +9,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 // this class contains the GUI of the white board, there has a main method at end, to test this class.
 // using swing and awt extends JFrame.
@@ -28,8 +33,9 @@ public class WhiteBoardGUI extends JFrame {
 	public JLabel yJLabel = new JLabel("0");
 	private static DrawBoard drawboard;
 	private static JTabbedPane tab;
+	private static JList userJlist;
 	private boolean newSessionAvailable = false;
-	private List<String> users;
+	private static JList<User> users;
 
 	// frame class constructor.
 	// initialize the frame. include frame title, size, location, and minimum size.
@@ -38,8 +44,7 @@ public class WhiteBoardGUI extends JFrame {
 	public WhiteBoardGUI(User user) {
 		super();
 		this.user = user;
-		users.add("user1");
-		users.add("user2");
+
 
 		// user list test-->
 
@@ -273,28 +278,29 @@ public class WhiteBoardGUI extends JFrame {
 
 	// this method return the chatWindow Panel, the right white one.
 	private JPanel chatWindow() {
+		String u;
 		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout( new BorderLayout());
 		JPanel listPanel = new JPanel();
 		JButton kickOut = new JButton();
-		JList users = new JList();
 		JLabel userNum = new JLabel();
 		JScrollPane jListScroll = new JScrollPane();
 		jListScroll.add(users);
-		for(String u:this.users){
-
+		if(user.IsHost()){
+			kickOut.setVisible(true);
+		} else {
+			kickOut.setVisible(false);
 		}
-		users.setModel(new AbstractListModel() {
+		kickOut.addActionListener(new ActionListener() {
 			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedUser = (String)users.getSelectedValue().getUsername();
 
-			public int getSize() {
-				return 0;
-			}
-
-			@Override
-			public Object getElementAt(int index) {
-				return null;
+				//user.chatClient.chatServer.kickuser(selectedUser);
 			}
 		});
+
+
 		// define properties of chat window panel.
 		JPanel chatP = new JPanel();
 		chatP.setLayout(new BorderLayout());
@@ -347,7 +353,10 @@ public class WhiteBoardGUI extends JFrame {
 		chatScreen.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		chatP.add(sendingWindow, BorderLayout.SOUTH);
 		chatP.add(chatScreen, BorderLayout.CENTER);
-		return chatP;
+		mainPanel.add(chatP,BorderLayout.CENTER);
+		mainPanel.add(jListScroll,BorderLayout.NORTH);
+
+		return mainPanel;
 
 	}
 
@@ -493,21 +502,21 @@ public class WhiteBoardGUI extends JFrame {
 	}
 
 	// This is the online list
-	private JPanel onlineList() {
-
-		// TODO onlineList may need some method in user class.
-		JPopupMenu popupMenu = new JPopupMenu();
-		JList list = new JList();
-		JPanel mainPanel = new JPanel();
-		JScrollPane scrollPane = new JScrollPane(list);
-		popupMenu.add("Kick Out");
-		popupMenu.add("Clear Draws");
-		popupMenu.add("User Info");
-		list.setModel(new DefaultListModel<String>());
-
-		return null;
-
-	}
+//	private JPanel onlineList() {
+//
+//		// TODO onlineList may need some method in user class.
+//		JPopupMenu popupMenu = new JPopupMenu();
+//		JList list = new JList();
+//		JPanel mainPanel = new JPanel();
+//		JScrollPane scrollPane = new JScrollPane(list);
+//		popupMenu.add("Kick Out");
+//		popupMenu.add("Clear Draws");
+//		popupMenu.add("User Info");
+//		list.setModel(new DefaultListModel<String>());
+//
+//		return null;
+//
+//	}
 
     public static void appendMsg(String msg){
 	    //textArea.append(msg);
@@ -544,6 +553,17 @@ public class WhiteBoardGUI extends JFrame {
             e.printStackTrace();
         }
     }
+
+    public static void updateUserList(List<User> urs) {
+    	// remove all elements from the JList.
+    	users.removeAll();
+    	// add new user from the input list into JList.
+    	DefaultListModel<User> usersModel = new DefaultListModel<>();
+    	for(int i = 0; i < urs.size();i++){
+    		usersModel.addElement(urs.get(i));
+		}
+		users.setModel(usersModel);
+	}
 
 
 
