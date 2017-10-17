@@ -44,24 +44,24 @@ public class NewFileWindow {
             User user = new User(u.getIp(), portField.getText(), u.getUsername(),true);
 
             //Setting up RMI chat client if host, joining RMI chat client if not
-            joinOrCreateRMIServer(user, u.getIp(), portField.getText());
+            joinOrCreateRMIServer(user, u.getIp(), Integer.parseInt(portField.getText()));
 
             WhiteBoardGUI gui = new WhiteBoardGUI(user);
             jf.dispose();
         });
     }
 
-    public void joinOrCreateRMIServer(User user, String ip, String port){
+    public void joinOrCreateRMIServer(User user, String ip, int port){
         //Setting up RMI chat client if host, joining RMI chat client if not
         if(user.IsHost() == true){
             try {
-                ServerDriver.setupRMI();
+                ServerDriver.setupRMI(port);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
         else {
-            String[] args = new String[]{user.getUsername(), ip, port};
+            String[] args = new String[]{user.getUsername(), ip, String.valueOf(port)};
             try {
                 ChatClientDriver.main(args);
             } catch (RemoteException e1) {
