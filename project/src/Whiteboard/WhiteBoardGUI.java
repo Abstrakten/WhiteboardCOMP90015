@@ -462,30 +462,39 @@ public class WhiteBoardGUI extends JFrame {
 		about.addActionListener(e -> {
             String msg = "WhiteBoard is a shared whiteboard application that allows users \nto draw simultaneously, as well as chat with other users on the board.\nThe application supports shapes (line,circle,oval,rectangle,as well as \nfree draw and text. It also allows the users to export the whiteboard \nto an image file(JPG).";
             String credit = "Developed by \nKasper, Marc, Navnita and Xin \n(Assignment 2 - COMP90015)";
-            JOptionPane.showMessageDialog(null, msg + "\n\n" + credit, "About WhiteBoard",
+            JOptionPane.showMessageDialog(null, msg + "\n\n" + credit, "About Whiteboard",
                     JOptionPane.INFORMATION_MESSAGE);
         });
 
 		undoOption.addActionListener(e -> {
 		    // TODO not sure if we want undo/redo to de-select a figure
-            drawboard.Undo();
-            drawboard.repaint();
+            try {
+                user.chatClient.chatServer.Undo();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
             System.out.println("Undo...");
         });
 
 		redoOption.addActionListener(e -> {
             // TODO not sure if we want undo/redo to de-select a figure
-            drawboard.Redo();
-            drawboard.repaint();
+            try {
+                user.chatClient.chatServer.Redo();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
             System.out.println("Redo...");
         });
 
 		clrOption.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(null, "Are you sure you want to erase the board?", "WARNING",
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                drawboard.Erase();
-                drawboard.repaint();
-                System.out.println("Clearing board...");
+				try {
+					user.chatClient.chatServer.eraseboard();
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+				System.out.println("Clearing board...");
             }
         });
 

@@ -300,9 +300,9 @@ public class DrawBoard extends JPanel implements MouseListener, MouseMotionListe
 		repaint();
 	}
 
-	public void Undo () {
-	    if (!shapes.isEmpty()) {
-	        // TODO Free draw undo is currently not working well
+    public void Undo () {
+        if (!shapes.isEmpty()) {
+            // TODO Free draw undo is currently not working well
             redoShapes.add(((Stack<ColoredShape>) shapes).pop());
         }
     }

@@ -3,6 +3,7 @@ package ChatServer;
 import ChatClient.ChatClientI;
 import Whiteboard.ColoredShape;
 import Whiteboard.DrawBoard;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,4 +17,7 @@ public interface ServerI extends Remote {
     void unregisterChatClient(ChatClientI chatClient) throws RemoteException;
     void broadcastMessage(String message) throws RemoteException;
     void draw(List<ColoredShape> shapes) throws RemoteException;
+    void eraseboard() throws RemoteException;
+    void Undo() throws RemoteException;
+    void Redo() throws RemoteException;
 }
